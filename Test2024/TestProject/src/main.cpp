@@ -14,7 +14,25 @@ using namespace vex;
 // A global instance of competition
 competition Competition;
 
+
 // define your global instances of motors and other devices here
+enum Cartridge {
+  RED,   // 100 rpm
+  GREEN, // 200 rpm
+  BLUE   // 600 rom
+};
+
+motor Motor1 = motor(PORT11);
+motor DriveMotor{Motor1};
+Cartridge Motor1Color = GREEN;
+brain Brain;
+
+void drive_config() {
+  Brain.Screen.print("robot_config ");
+  Brain.Screen.print("color:" + (Motor1Color == RED) ? 100 : ((Motor1Color == GREEN) ? 200 : (Motor1Color == BLUE) ? 600 : 0)); Brain.Screen.newLine();
+  Motor1.setStopping(brake);
+  Motor1.setVelocity((Motor1Color == RED) ? 100 : ((Motor1Color == GREEN) ? 200 : (Motor1Color == BLUE) ? 600 : 0), rpm);
+}
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -27,9 +45,12 @@ competition Competition;
 /*---------------------------------------------------------------------------*/
 
 void pre_auton(void) {
-
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
+  Brain.Screen.print("pre_auton"); Brain.Screen.newLine();
+  
+  // Runs any motor configs necessary to drive
+  drive_config();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -46,6 +67,19 @@ void autonomous(void) {
   // ..........................................................................
   // Insert autonomous user code here.
   // ..........................................................................
+  Brain.Screen.print("autonomous ");
+  
+  Brain.Screen.print("forward ");
+  Motor1.spin(forward);
+  wait(4, sec);
+  Brain.Screen.print("break ");
+  Motor1.stop();
+  wait(2, sec);
+  Brain.Screen.print("reverse ");
+  Motor1.spin(reverse);
+  wait(5, sec);
+  Brain.Screen.print("break"); Brain.Screen.newLine();
+  Motor1.stop();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -59,6 +93,7 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
+  Brain.Screen.print("usercontrol"); Brain.Screen.newLine();
   // User control code here, inside the loop
   while (1) {
     // This is the main execution loop for the user control program.
