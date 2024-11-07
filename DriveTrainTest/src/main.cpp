@@ -22,47 +22,61 @@ enum Cartridge {
   BLUE   // 600 rom
 };
 
-motor RMotor1 = motor(PORT1);
-motor RMotor2 = motor(PORT10);
+motor RMotor1 = motor(PORT11, true);
+motor RMotor2 = motor(PORT20, true);
 
-motor_group RDriveTrain;
+motor LMotor1 = motor(PORT1, false);
+motor LMotor2 = motor(PORT10, false);
 
-motor LMotor1 = motor(PORT11);
-motor LMotor2 = motor(PORT20);
-
-motor_group LDriveTrain;
+motor_group RDriveTrain = motor_group(RMotor1, RMotor2);
+motor_group LDriveTrain = motor_group(LMotor1, LMotor2);
 
 Cartridge DriveTrainColor = GREEN;
 controller Controller = controller();
 
-int LAxis;
-int RAxis;
-
-
-
+int LAxis = 0;
+int RAxis = 0;
 
 brain Brain;
+int printTime = 0;
+bool pressed = false;
 
+int colorToRPM(Cartridge color) {return (color == RED) ? 100 : ((color == GREEN) ? 200 : (color == BLUE) ? 600 : 0);}
 
 void drive_config() {
+  //drivetrain Drivetrain = drivetrain(LDriveTrain, RDriveTrain, 259.34, 320, 40, mm, 1); // sets all default, :cry:
+
   Brain.Screen.print("robot_config "); 
-  RMotor1.setReversed(true);
-  RMotor2.setReversed(true);
-
-  motor_group RDriveTrain = motor_group(RMotor1,RMotor2);
-
-  LMotor1.setReversed(false);
-  LMotor2.setReversed(false);
-
-  motor_group LDriveTrain = motor_group(LMotor1,LMotor2);
-
 
   RDriveTrain.setStopping(brake);
   LDriveTrain.setStopping(brake);
 
-  RDriveTrain.setVelocity((DriveTrainColor == RED) ? 100 : ((DriveTrainColor == GREEN) ? 200 : (DriveTrainColor == BLUE) ? 600 : 0), rpm);
-  LDriveTrain.setVelocity((DriveTrainColor == RED) ? 100 : ((DriveTrainColor == GREEN) ? 200 : (DriveTrainColor == BLUE) ? 600 : 0), rpm);
-  drivetrain Drivetrain = drivetrain(LDriveTrain, RDriveTrain, 259.34, 320, 40, mm, 1);
+  RDriveTrain.setVelocity(colorToRPM(GREEN), rpm);
+  LDriveTrain.setVelocity(colorToRPM(GREEN), rpm);
+}
+
+void printInfo() {
+  if(printTime == 2) {
+    Brain.Screen.clearLine();
+    Brain.Screen.print("pressed:");
+    Brain.Screen.print(pressed);
+    Brain.Screen.print(" LAxis:");
+    Brain.Screen.print(LAxis);
+    Brain.Screen.print(" RAxis:");
+    Brain.Screen.print(RAxis);
+    printTime = 0;
+  } else {
+    printTime++;
+  }
+}
+
+void triggerPressed() {
+  if (pressed) 
+    pressed = false;
+  else
+    pressed = true;
+
+  Brain.Screen.print("controller button pressed");
 }
 
 
@@ -80,10 +94,7 @@ void pre_auton(void) {
 
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
-
   
-  // Runs any motor configs necessary to drive
-  drive_config();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -114,6 +125,8 @@ void autonomous(void) {
 
 void usercontrol(void) {
   // User control code here, inside the loop
+  // Runs any motor configs necessary to drive
+  drive_config(); 
   while (1) {
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
@@ -125,27 +138,57 @@ void usercontrol(void) {
     // ........................................................................
     LAxis = Controller.Axis3.position();
     RAxis = Controller.Axis2.position();
-    
-    Brain.Screen.print("LAxis:" + LAxis);
-    Brain.Screen.print("RAxis:" + RAxis); Brain.Screen.newLine();
-    
 
-    if (LAxis >= 10) {
-        LDriveTrain.spin(forward);
-    }else if (LAxis <= -10){
-        LDriveTrain.spin(reverse);
-    }else{
-      LDriveTrain.stop();
+    Controller.ButtonA.pressed(triggerPressed);
+    
+    if(pressed) {
+      //******************Linear Speed Increase*****************/
+      if (LAxis >= 10 ) {
+        LDriveTrain.spin(forward, (LAxis*colorToRPM(GREEN))/100, rpm);
+      }else if ( LAxis <= -10) {
+        LDriveTrain.spin(reverse, (LAxis*colorToRPM(GREEN))/100, rpm);
+      }else{
+        LDriveTrain.stop();
+      }
+
+      if (RAxis >= 10) {
+        RDriveTrain.spin(forward, (RAxis*colorToRPM(GREEN))/100, rpm);
+      }else if(RAxis <= -10) {
+        RDriveTrain.spin(reverse, (RAxis*colorToRPM(GREEN))/100, rpm);
+      }else {
+        RDriveTrain.stop();
+      }
+    } else {
+      //******************Exponetial Speed Increase*****************/
+      if (LAxis >= 10) {
+        LDriveTrain.spin(forward, ((((LAxis*colorToRPM(GREEN))*(LAxis*colorToRPM(GREEN)))/(colorToRPM(GREEN)*100))/100), rpm);
+      }else if(LAxis <= -10) {
+        LDriveTrain.spin(reverse, ((((LAxis*colorToRPM(GREEN))*(LAxis*colorToRPM(GREEN)))/(colorToRPM(GREEN)*100))/100), rpm);
+      }else {
+        LDriveTrain.stop();
+      }
+
+      if (RAxis >= 10) {
+        RDriveTrain.spin(forward, ((((RAxis*colorToRPM(GREEN))*(RAxis*colorToRPM(GREEN)))/(colorToRPM(GREEN)*100))/100), rpm);
+      }else if(RAxis <= -10) {
+        RDriveTrain.spin(reverse, ((((RAxis*colorToRPM(GREEN))*(RAxis*colorToRPM(GREEN)))/(colorToRPM(GREEN)*100))/100), rpm);
+      }else{
+        RDriveTrain.stop();
+      }
     }
 
-    if (RAxis >= 10) {
-        RDriveTrain.spin(forward);
-    }else if (RAxis <= -10){
-        RDriveTrain.spin(reverse);
-    }else{
-      RDriveTrain.stop();
-    }
+    //******************Set to max speed*****************/
+    // if (LAxis >= 10 || LAxis <= -10) {
+    //   LDriveTrain.spin(forward, colorToRPM(GREEN), rpm);
+    // }else{
+    //   LDriveTrain.stop();
+    // }
 
+    // if (RAxis >= 10 || RAxis <= -10) {
+    //   RDriveTrain.spin(forward, colorToRPM(GREEN),, rpm);
+    // }else{
+    //   RDriveTrain.stop();
+    // }
 
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
@@ -165,6 +208,7 @@ int main() {
 
   // Prevent main from exiting with an infinite loop.
   while (true) {
+    printInfo();
     wait(100, msec);
   }
 }
