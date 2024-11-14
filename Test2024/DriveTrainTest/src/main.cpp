@@ -8,6 +8,7 @@
 /*----------------------------------------------------------------------------*/
 
 #include "vex.h"
+#include <cmath>
 
 using namespace vex;
 
@@ -22,24 +23,27 @@ enum Cartridge {
   BLUE   // 600 rom
 };
 
-motor RMotor1 = motor(PORT11, true);
-motor RMotor2 = motor(PORT20, true);
+motor RMotor1 = motor(PORT11, false);
+motor RMotor2 = motor(PORT20, false);
+motor RMotor3 = motor(PORT15, false);
 
-motor LMotor1 = motor(PORT1, false);
-motor LMotor2 = motor(PORT10, false);
+motor LMotor1 = motor(PORT1, true);
+motor LMotor2 = motor(PORT10, true);
+motor LMotor3 = motor(PORT5, true);
 
-motor_group RDriveTrain = motor_group(RMotor1, RMotor2);
-motor_group LDriveTrain = motor_group(LMotor1, LMotor2);
+motor_group RDriveTrain = motor_group(RMotor1, RMotor2, RMotor3);
+motor_group LDriveTrain = motor_group(LMotor1, LMotor2, LMotor3);
 
-Cartridge DriveTrainColor = GREEN;
+Cartridge DriveTrainColor = GREEN;  
 controller Controller = controller();
 
 int LAxis = 0;
 int RAxis = 0;
+int const DEADZONE = 10;
 
 brain Brain;
 int printTime = 0;
-bool pressed = false;
+int pressed = 0;
 
 int colorToRPM(Cartridge color) {return (color == RED) ? 100 : ((color == GREEN) ? 200 : (color == BLUE) ? 600 : 0);}
 
@@ -70,15 +74,53 @@ void printInfo() {
   }
 }
 
-void triggerPressed() {
-  if (pressed) 
-    pressed = false;
-  else
-    pressed = true;
+void AtriggerPressed() {
+  pressed = (pressed+1) % 4;
 
-  Brain.Screen.print("controller button pressed");
+  Brain.Screen.print("controller button A pressed");
 }
 
+void BtriggerPressed() {
+  pressed = 0;
+
+  Brain.Screen.print("controller button B pressed");
+}
+
+void XtriggerPressed() {
+  pressed = 1;
+
+  Brain.Screen.print("controller button X pressed");
+}
+
+void YtriggerPressed() {
+  pressed = 2;
+
+  Brain.Screen.print("controller button Y pressed");
+}
+
+double controllerMod(int stick, Cartridge color) {
+  // x = stick; m = color; s = 100
+  // https://www.desmos.com/calculator/ju01k7ni16
+  switch (pressed) {
+    case 0:
+      return ((pow((stick*colorToRPM(color)),3))/(pow((colorToRPM(color)*100),2)))/100;                                                                                                                                                                       // ((x*m)^3/(m*s)^2)/s      | exponential slow ramp   | domain [-100,100]             | range [-200,200]
+    case 1:
+      return (stick>=0.0) ? (((pow((stick*colorToRPM(color)),2))/(colorToRPM(color)*100))/100) : -(((pow((stick*colorToRPM(color)),2))/(colorToRPM(color)*100))/100);                                                                                         // (((x*m)^2)/(m*s))/s      | exponential faster ramp | domain [-100,0)U[0,100]       | range [-200,0)U[0,200]
+    case 2:
+      return (stick==0.0) ? 0.0 : ((stick>0.0) ? (((pow((colorToRPM(color)*(pow(stick,2))),3))/((pow((stick*colorToRPM(color)*100),2))))/pow(100,2)) : -(((pow((colorToRPM(color)*(pow(stick,2))),3))/((pow((stick*colorToRPM(color)*100),2))))/pow(100,2))); // (((mx^2)^3/(msx)^2))/s^2 | exponential faster ramp | domain [-100,0)U[0,0]U(0,100] | range [-200,0)U[0,0]U(0,200]
+    case 3:
+      return (stick*colorToRPM(color))/100; //I like it :(                                                                                                                                                                                                    // (x*m)/s                  | linear                  | domain [-100,100]             | range [-200,200]
+  }
+  Brain.Screen.print("**********DRIVE ERROR**********");
+  return 0.0;
+}
+
+void defineButtons() {
+  Controller.ButtonA.pressed(AtriggerPressed);
+  Controller.ButtonB.pressed(BtriggerPressed);
+  Controller.ButtonX.pressed(XtriggerPressed);
+  Controller.ButtonY.pressed(YtriggerPressed);
+}
 
 /*---------------------------------------------------------------------------*/
 /*                          Pre-Autonomous Functions                         */
@@ -91,10 +133,10 @@ void triggerPressed() {
 /*---------------------------------------------------------------------------*/
 
 void pre_auton(void) {
-
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
-  
+
+  drive_config();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -126,7 +168,7 @@ void autonomous(void) {
 void usercontrol(void) {
   // User control code here, inside the loop
   // Runs any motor configs necessary to drive
-  drive_config(); 
+  defineButtons();
   while (1) {
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
@@ -136,63 +178,28 @@ void usercontrol(void) {
     // Insert user code here. This is where you use the joystick values to
     // update your motors, etc.
     // ........................................................................
+    
+    //******************drive control//******************//
     LAxis = Controller.Axis3.position();
     RAxis = Controller.Axis2.position();
 
-    Controller.ButtonA.pressed(triggerPressed);
-    
-    if(pressed) {
-      //******************Linear Speed Increase*****************/
-      if (LAxis >= 10 ) {
-        LDriveTrain.spin(forward, (LAxis*colorToRPM(GREEN))/100, rpm);
-      }else if ( LAxis <= -10) {
-        LDriveTrain.spin(reverse, (LAxis*colorToRPM(GREEN))/100, rpm);
-      }else{
-        LDriveTrain.stop();
-      }
-
-      if (RAxis >= 10) {
-        RDriveTrain.spin(forward, (RAxis*colorToRPM(GREEN))/100, rpm);
-      }else if(RAxis <= -10) {
-        RDriveTrain.spin(reverse, (RAxis*colorToRPM(GREEN))/100, rpm);
-      }else {
-        RDriveTrain.stop();
-      }
-    } else {
-      //******************Exponetial Speed Increase*****************/
-      if (LAxis >= 10) {
-        LDriveTrain.spin(forward, ((((LAxis*colorToRPM(GREEN))*(LAxis*colorToRPM(GREEN)))/(colorToRPM(GREEN)*100))/100), rpm);
-      }else if(LAxis <= -10) {
-        LDriveTrain.spin(reverse, ((((LAxis*colorToRPM(GREEN))*(LAxis*colorToRPM(GREEN)))/(colorToRPM(GREEN)*100))/100), rpm);
-      }else {
-        LDriveTrain.stop();
-      }
-
-      if (RAxis >= 10) {
-        RDriveTrain.spin(forward, ((((RAxis*colorToRPM(GREEN))*(RAxis*colorToRPM(GREEN)))/(colorToRPM(GREEN)*100))/100), rpm);
-      }else if(RAxis <= -10) {
-        RDriveTrain.spin(reverse, ((((RAxis*colorToRPM(GREEN))*(RAxis*colorToRPM(GREEN)))/(colorToRPM(GREEN)*100))/100), rpm);
-      }else{
-        RDriveTrain.stop();
-      }
+    if (LAxis >= DEADZONE || LAxis <= -DEADZONE) {
+      LDriveTrain.spin(forward, controllerMod(LAxis, GREEN), rpm);
+    }else{
+      LDriveTrain.stop();
     }
 
-    //******************Set to max speed*****************/
-    // if (LAxis >= 10 || LAxis <= -10) {
-    //   LDriveTrain.spin(forward, colorToRPM(GREEN), rpm);
-    // }else{
-    //   LDriveTrain.stop();
-    // }
-
-    // if (RAxis >= 10 || RAxis <= -10) {
-    //   RDriveTrain.spin(forward, colorToRPM(GREEN),, rpm);
-    // }else{
-    //   RDriveTrain.stop();
-    // }
+    if (RAxis >= DEADZONE || RAxis <= -DEADZONE) {
+      RDriveTrain.spin(forward, controllerMod(RAxis, GREEN), rpm);
+    }else {
+      RDriveTrain.stop();
+      }
+  //******************drive control//******************//
 
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
   }
+
 }
 
 //
