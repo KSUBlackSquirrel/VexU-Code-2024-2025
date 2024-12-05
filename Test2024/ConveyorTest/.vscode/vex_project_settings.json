@@ -1,0 +1,19 @@
+{
+	"extension": {
+		"version": "0.6.1",
+		"json": 2
+	},
+	"project": {
+		"name": "ConveyorTest",
+		"description": "",
+		"creationDate": "12/4/2024, 6:59:29 PM",
+		"platform": "V5",
+		"language": "cpp",
+		"slot": 7,
+		"sdkVersion": "V5_20240802_15_00_00",
+		"cpp": {
+			"includePath": [],
+			"printf_float": true
+		}
+	}
+}
