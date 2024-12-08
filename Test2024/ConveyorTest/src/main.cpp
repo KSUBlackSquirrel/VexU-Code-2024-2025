@@ -12,9 +12,9 @@
 using namespace vex;
 
 // A global instance of competition
-competition Competition;
-controller Controller = controller();
-brain Brain;
+competition COMPETITION;
+controller CONTROLLER = controller();
+brain BRAIN;
 
 // define your global instances of motors and other devices here
 enum Cartridge {
@@ -23,65 +23,80 @@ enum Cartridge {
   BLUE   // 600 rom
 };
 
-motor ConveyorMotor = motor(PORT2, false);
-Cartridge ConveyorMotorCartridge = BLUE;
-motor IntakeMotor = motor(PORT3, false);
-Cartridge IntakeMotorCartridge = BLUE;
+motor conveyorMotor = motor(PORT2, false);
+Cartridge conveyorMotorCartridge = GREEN;
+motor intakeMotor = motor(PORT3, false);
+Cartridge intakeMotorCartridge = BLUE;
 
-int LAxis = 0;
-int RAxis = 0;
+int leftAxis = 0;
+int rightAxis = 0;
 int const DEADZONE = 10;
 double conveyorRPM = 0.0;
 
-motor RMotor1 = motor(PORT11, false);
-motor RMotor2 = motor(PORT12, false);
+motor rightMotor1 = motor(PORT11, false);
+motor rightMotor2 = motor(PORT12, false);
 
-motor LMotor1 = motor(PORT19, true);
-motor LMotor2 = motor(PORT20, true);
+motor leftMotor1 = motor(PORT19, true);
+motor leftMotor2 = motor(PORT20, true);
 
-motor_group RDriveTrain = motor_group(RMotor1, RMotor2);
-motor_group LDriveTrain = motor_group(LMotor1, LMotor2);
-Cartridge DriveTrainColor = GREEN;
+motor_group rightDriveTrain = motor_group(rightMotor1, rightMotor2);
+motor_group leftDriveTrain = motor_group(leftMotor1, leftMotor2);
+Cartridge driveTrainColor = GREEN;
 
-//spneumatic Pnuematic = pneumatic(PORT4);
-
+digital_out pneumatic = digital_out(BRAIN.ThreeWirePort.F);
+bool pneumaticState = false;
 
 int colorToRPM(Cartridge color) {return (color == RED) ? 100 : ((color == GREEN) ? 200 : (color == BLUE) ? 600 : 0);}
 double controllerMod(int stick, Cartridge color) {return (stick*colorToRPM(color))/100;}
 
+void recordInfo() {
+  conveyorRPM = conveyorMotor.velocity(rpm);
+}
 void printInfo() {
-  //Brain.Screen.clearScreen(color(0,0,0));
-  //Brain.Screen.setCursor(0,0);
-  Brain.Screen.clearLine();
-  Brain.Screen.print("Conveyor Motor Velocity:");
-  Brain.Screen.print(conveyorRPM); //TODO not recording ???
-  // Brain.Screen.newLine();
-  // Brain.Screen.print("RAxis/X/Y To Spin");
-  // Brain.Screen.newLine();
-  // Brain.Screen.print("DpadDown Sets Speed From LAxis");
-  // Brain.Screen.newLine();
-  // Brain.Screen.print("Motor Cartridge:");
+  //******************Controller Screen******************//
+  CONTROLLER.Screen.clearScreen();
+  CONTROLLER.Screen.setCursor(0,0);
+  CONTROLLER.Screen.print("Conveyor Velocity:");
+  CONTROLLER.Screen.print(conveyorRPM);
+  //******************Controller Screen******************//
+
+
+  //******************Brain Screen******************//
+  BRAIN.Screen.clearScreen(color(0,0,0));
+  BRAIN.Screen.setCursor(0,0);
+  BRAIN.Screen.print("Conveyor Velocity:");
+  BRAIN.Screen.print(conveyorRPM);
+  BRAIN.Screen.newLine();
+  BRAIN.Screen.print("pneumaticState:");
+  BRAIN.Screen.print(pneumaticState);
+  // BRAIN.Screen.newLine();
+  // BRAIN.Screen.print("DpadDown Sets Speed From leftAxis");
+  // BRAIN.Screen.newLine();
+  // BRAIN.Screen.print("Motor Cartridge:");
   // printCartridge(singleMotorCartridge);
-  // Brain.Screen.newLine();
-  // Brain.Screen.print("Button Speed:");
-  // Brain.Screen.print(buttonSpeed);
+  // BRAIN.Screen.newLine();
+  // BRAIN.Screen.print("Button Speed:");
+  // BRAIN.Screen.print(buttonSpeed);
+  //******************Brain Screen******************//
 
 }
-void conveyorUp() {ConveyorMotor.spin(forward, colorToRPM(ConveyorMotorCartridge), rpm);}
-void conveyorDown() {ConveyorMotor.spin(reverse, colorToRPM(ConveyorMotorCartridge), rpm);}
-void conveyorStop() {ConveyorMotor.stop();}
-void IntakeUp() {IntakeMotor.spin(forward, colorToRPM(IntakeMotorCartridge), rpm);}
-void IntakeDown() {IntakeMotor.spin(reverse, colorToRPM(IntakeMotorCartridge), rpm);}
-void IntakeStop() {IntakeMotor.stop();}
+void conveyorUp() {conveyorMotor.spin(forward, colorToRPM(conveyorMotorCartridge), rpm);}
+void conveyorDown() {conveyorMotor.spin(reverse, colorToRPM(conveyorMotorCartridge), rpm);}
+void conveyorStop() {conveyorMotor.stop();}
+void IntakeUp() {intakeMotor.spin(forward, colorToRPM(intakeMotorCartridge), rpm);}
+void IntakeDown() {intakeMotor.spin(reverse, colorToRPM(intakeMotorCartridge), rpm);}
+void IntakeStop() {intakeMotor.stop();}
+void pneumaticToggle() {pneumaticState=!pneumaticState; pneumatic.set(pneumaticState);}
 void defineButtons() {
-  Controller.ButtonL2.pressed(IntakeUp);
-  Controller.ButtonL1.pressed(IntakeDown);
-  Controller.ButtonL2.released(IntakeStop);
-  Controller.ButtonL1.released(IntakeStop);
-  Controller.ButtonR2.pressed(conveyorUp);
-  Controller.ButtonR1.pressed(conveyorDown);
-  Controller.ButtonR2.released(conveyorStop);
-  Controller.ButtonR1.released(conveyorStop);
+  CONTROLLER.ButtonL2.pressed(IntakeUp);
+  CONTROLLER.ButtonL1.pressed(IntakeDown);
+  CONTROLLER.ButtonL2.released(IntakeStop);
+  CONTROLLER.ButtonL1.released(IntakeStop);
+  CONTROLLER.ButtonR2.pressed(conveyorUp);
+  CONTROLLER.ButtonR1.pressed(conveyorDown);
+  CONTROLLER.ButtonR2.released(conveyorStop);
+  CONTROLLER.ButtonR1.released(conveyorStop);
+  CONTROLLER.ButtonX.pressed(pneumaticToggle);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -127,12 +142,9 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
-  Controller.Screen.clearScreen();
-  Controller.Screen.print("hello world");
   // User control code here, inside the loop
   defineButtons();
   while (1) {
-    conveyorRPM = ConveyorMotor.velocity(rpm);
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
     // values based on feedback from the joysticks.
@@ -142,22 +154,22 @@ void usercontrol(void) {
     // update your motors, etc.
     // ........................................................................
 
-    //******************drive control//******************//
-    LAxis = Controller.Axis3.position();
-    RAxis = Controller.Axis2.position();
+    //******************drive control******************//
+    leftAxis = CONTROLLER.Axis3.position();
+    rightAxis = CONTROLLER.Axis2.position();
 
-    if (LAxis >= DEADZONE || LAxis <= -DEADZONE) {
-      LDriveTrain.spin(forward, controllerMod(LAxis, DriveTrainColor), rpm);
+    if (leftAxis >= DEADZONE || leftAxis <= -DEADZONE) {
+      leftDriveTrain.spin(forward, controllerMod(leftAxis, driveTrainColor), rpm);
     } else {
-      LDriveTrain.stop();
+      leftDriveTrain.stop();
     }
 
-    if (RAxis >= DEADZONE || RAxis <= -DEADZONE) {
-      RDriveTrain.spin(forward, controllerMod(RAxis, DriveTrainColor), rpm);
+    if (rightAxis >= DEADZONE || rightAxis <= -DEADZONE) {
+      rightDriveTrain.spin(forward, controllerMod(rightAxis, driveTrainColor), rpm);
     } else {
-      RDriveTrain.stop();
+      rightDriveTrain.stop();
     }
-    //******************drive control//******************//
+    //******************drive control******************//
 
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
@@ -169,8 +181,8 @@ void usercontrol(void) {
 //
 int main() {
   // Set up callbacks for autonomous and driver control periods.
-  Competition.autonomous(autonomous);
-  Competition.drivercontrol(usercontrol);
+  COMPETITION.autonomous(autonomous);
+  COMPETITION.drivercontrol(usercontrol);
 
   // Run the pre-autonomous function.
   pre_auton();
@@ -178,6 +190,7 @@ int main() {
   // Prevent main from exiting with an infinite loop.
   while (true) {
     wait(100, msec);
+    recordInfo();
     printInfo();
   }
 }
