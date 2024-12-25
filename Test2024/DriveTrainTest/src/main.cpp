@@ -20,7 +20,7 @@ competition Competition;
 enum Cartridge {
   RED,   // 100 rpm
   GREEN, // 200 rpm
-  BLUE   // 600 rom
+  BLUE   // 600 rpm
 };
 
 motor RMotor1 = motor(PORT11, false);
