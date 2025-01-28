@@ -24,7 +24,7 @@ enum Cartridge {
 };
 
 motor conveyorMotor = motor(PORT2, false);
-Cartridge conveyorMotorCartridge = GREEN;
+Cartridge conveyorMotorCartridge = BLUE;
 motor intakeMotor = motor(PORT3, false);
 Cartridge intakeMotorCartridge = BLUE;
 
@@ -33,8 +33,8 @@ int rightAxis = 0;
 int const DEADZONE = 10;
 double conveyorRPM = 0.0;
 
-motor rightMotor1 = motor(PORT11, false);
-motor rightMotor2 = motor(PORT12, false);
+motor rightMotor1 = motor(PORT12, false);
+motor rightMotor2 = motor(PORT13, false);
 
 motor leftMotor1 = motor(PORT19, true);
 motor leftMotor2 = motor(PORT20, true);
@@ -80,16 +80,16 @@ void printInfo() {
   //******************Brain Screen******************//
 
 }
-void conveyorUp() {conveyorMotor.spin(forward, colorToRPM(conveyorMotorCartridge), rpm);}
-void conveyorDown() {conveyorMotor.spin(reverse, colorToRPM(conveyorMotorCartridge), rpm);}
+void conveyorUp() {conveyorMotor.spin(forward, 180, rpm);}
+void conveyorDown() {conveyorMotor.spin(reverse, 180, rpm);}
 void conveyorStop() {conveyorMotor.stop();}
 void IntakeUp() {intakeMotor.spin(forward, colorToRPM(intakeMotorCartridge), rpm);}
 void IntakeDown() {intakeMotor.spin(reverse, colorToRPM(intakeMotorCartridge), rpm);}
 void IntakeStop() {intakeMotor.stop();}
 void pneumaticToggle() {pneumaticState=!pneumaticState; pneumatic.set(pneumaticState);}
 void defineButtons() {
-  CONTROLLER.ButtonL2.pressed(IntakeUp);
-  CONTROLLER.ButtonL1.pressed(IntakeDown);
+  CONTROLLER.ButtonL2.pressed(IntakeDown);
+  CONTROLLER.ButtonL1.pressed(IntakeUp);
   CONTROLLER.ButtonL2.released(IntakeStop);
   CONTROLLER.ButtonL1.released(IntakeStop);
   CONTROLLER.ButtonR2.pressed(conveyorUp);
