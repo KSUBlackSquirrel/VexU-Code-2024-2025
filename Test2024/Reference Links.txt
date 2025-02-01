@@ -1,3 +1,8 @@
 https://docs.google.com/presentation/d/1-Oz-3Bat6-T8ZYgk5fY-Iz6HGQ-grj4LycLAIb5l_sg/edit?usp=sharing
 https://lemlib.readthedocs.io/en/stable/index.html
 https://path.jerryio.com/
+
+https://pros.cs.purdue.edu/v5/api/cpp/rtos.html#pros-task -----For Tasks
+https://pros.cs.purdue.edu/v5/tutorials/topical/notifications.html ---toturial for task
+
+(Use tasks with singleton)
