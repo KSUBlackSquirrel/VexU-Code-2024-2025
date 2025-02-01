@@ -41,6 +41,15 @@
  */
 //#include "okapi/api.hpp"
 
+//subsystems
+#include "subsystem/drive.h"
+#include "subsystem/intake.h"
+#include "subsystem/clamp.h"
+
+//other
+#include "src/globals.h"
+
+
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
  * Motor, you can use the namespace with the following commented out line.
@@ -52,6 +61,7 @@
 // using namespace pros;
 // using namespace pros::literals;
 // using namespace okapi;
+
 
 /**
  * Prototypes for the competition control tasks are redefined here to ensure
