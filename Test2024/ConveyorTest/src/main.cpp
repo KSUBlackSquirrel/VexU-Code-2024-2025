@@ -46,6 +46,9 @@ Cartridge driveTrainColor = GREEN;
 digital_out pneumatic = digital_out(BRAIN.ThreeWirePort.F);
 bool pneumaticState = false;
 
+motor armMotor = motor(PORT7, true);
+Cartridge armColor = RED;
+
 int colorToRPM(Cartridge color) {return (color == RED) ? 100 : ((color == GREEN) ? 200 : (color == BLUE) ? 600 : 0);}
 double controllerMod(int stick, Cartridge color) {return (stick*colorToRPM(color))/100;}
 
@@ -80,6 +83,9 @@ void printInfo() {
   //******************Brain Screen******************//
 
 }
+void armForward() {armMotor.spin(forward, colorToRPM(armColor), rpm);}
+void armBack() {armMotor.spin(reverse, colorToRPM(armColor), rpm);}
+void armStop() {armMotor.stop(hold);}
 void conveyorUp() {conveyorMotor.spin(forward, 180, rpm);}
 void conveyorDown() {conveyorMotor.spin(reverse, 180, rpm);}
 void conveyorStop() {conveyorMotor.stop();}
@@ -97,6 +103,10 @@ void defineButtons() {
   CONTROLLER.ButtonR2.released(conveyorStop);
   CONTROLLER.ButtonR1.released(conveyorStop);
   CONTROLLER.ButtonX.pressed(pneumaticToggle);
+  CONTROLLER.ButtonUp.pressed(armForward);
+  CONTROLLER.ButtonUp.released(armStop);
+  CONTROLLER.ButtonDown.pressed(armBack);
+  CONTROLLER.ButtonDown.released(armStop);
 }
 
 /*---------------------------------------------------------------------------*/

@@ -1,6 +1,10 @@
 #include "main.h"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 
+
+pros::Controller controller(pros::E_CONTROLLER_MASTER);
+
+
 /**
  * A callback function for LLEMU's center button.
  *
@@ -25,11 +29,18 @@ void on_center_button() {
  */
 void initialize() {
     pros::lcd::initialize(); // initialize brain screen
+	
 	drive::init();
+	arm::init();
+	clamp::init();
+	intake::init();
+	conveyor::init();
 
 	// print position to brain screen
 	pros::Task screen_task([&]() {
 		while (true) {
+			arm::print(controller);
+
 			// print robot location to the brain screen
 			pros::lcd::print(0, "X: %f", drive::pos().x); // x
 			pros::lcd::print(1, "Y: %f", drive::pos().y); // y
@@ -91,6 +102,11 @@ void autonomous() {
 void opcontrol() {
 
 	while (true) {
-		drive::opcontrol(globalControl::controller);
+		drive::opcontrol(controller);
+		arm::opcontrol(controller);
+		clamp::opcontrol(controller);
+		intake::opcontrol(controller);
+		conveyor::opcontrol(controller);
+		pros::delay(20);
 	}
 }

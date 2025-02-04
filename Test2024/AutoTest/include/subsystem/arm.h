@@ -1,16 +1,16 @@
-#ifndef _INTAKE_H_
-#define _INTAKE_H_
+#ifndef _ARM_H_
+#define _ARM_H_
 
 #include "lemlib/api.hpp"
 
-namespace intake{
+namespace arm{
 
 void init();
 
-void IntakeUp();
-void IntakeDown();
-void IntakeStop();
+void armUp();
+void armDown();
 
+void print(pros::Controller& controller);
 
 // drive controls
 void opcontrol(pros::Controller& controller);

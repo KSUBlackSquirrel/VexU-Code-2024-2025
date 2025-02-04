@@ -8,14 +8,14 @@ namespace drive{
 
 // input curve for throttle and steer inputs during driver control
 lemlib::ExpoDriveCurve throttle_curve(
-    joystickDeadband, // joystick deadband out of 127
-    joystickDeadband, // minimum output where drivetrain will move out of 127
-    expoCurve // expo curve gain
+    globalControl::joystickDeadband, // joystick deadband out of 127
+    globalControl::joystickDeadband, // minimum output where drivetrain will move out of 127
+    globalControl::expoCurve // expo curve gain
 );
 lemlib::ExpoDriveCurve steer_curve(
-    joystickDeadband, // joystick deadband out of 127
-    joystickDeadband, // minimum output where drivetrain will move out of 127
-    expoCurve // expo curve gain
+    globalControl::joystickDeadband, // joystick deadband out of 127
+    globalControl::joystickDeadband, // minimum output where drivetrain will move out of 127
+    globalControl::expoCurve // expo curve gain
 );
 
 pros::MotorGroup left_motor_group(globalDrive::leftMotorsID, globalDrive::driveTrainColor);    // Creates a motor group with forwards ports 1 & 3 and reversed port 2
@@ -87,6 +87,7 @@ lemlib::Chassis chassis(
 
 
 void init() {
+    chassis.setBrakeMode(pros::E_MOTOR_BRAKE_HOLD);
     chassis.calibrate(); // calibrate sensors
 }
 
@@ -120,20 +121,12 @@ void autonomous(){
 }
 
 void opcontrol(pros::Controller& controller){
-    // get left y and right y positions
-    int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-    int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-
     // move the robot
-    chassis.tank(leftY, rightY);
+    chassis.tank(controller.get_analog(globalDrive::leftStickY), controller.get_analog(globalDrive::rightStickY));
 
     // delay to save resources
     pros::delay(25);
 }
-
-
-
-
 
 
 } //namespace drive
