@@ -1,5 +1,4 @@
 #include "intake.h"
-#include "globals.h"
 
 namespace intake{
 

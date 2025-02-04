@@ -2,6 +2,7 @@
 #define _CLAMP_H_
 
 #include "lemlib/api.hpp"
+#include "globals.h"
 
 namespace clamp{
 
