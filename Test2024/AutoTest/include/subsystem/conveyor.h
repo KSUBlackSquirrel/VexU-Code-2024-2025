@@ -2,6 +2,7 @@
 #define _CONVEYOR_H_
 
 #include "lemlib/api.hpp"
+#include "globals.h"
 
 namespace conveyor{
 

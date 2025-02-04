@@ -1,8 +1,7 @@
 #include "drive.h"
-#include "globals.h"
 
-// 15 right motor id 12,13 | left drive motor id 19,20 | imu id 5 | wheel diameter NEW_325 | wheel track 11.625 | width 14 | lenght 14.55 | wheel rpm 400
-// 24  motor id  |  drive motor id  | imu id  | wheel diameter NEW_325 | wheel track 13.625 | width 16 | lenght 18.235 | wheel rpm 400
+// 15 right motor id 12,13 | left drive motor id 19,20 | imu id 5 | wheel diameter NEW_325 | wheel track 11.625 | width 14 | length 14.55 | wheel rpm 400
+// 24  motor id  |  drive motor id  | imu id  | wheel diameter NEW_325 | wheel track 13.625 | width 16 | length 18.235 | wheel rpm 400
 
 namespace drive{
 

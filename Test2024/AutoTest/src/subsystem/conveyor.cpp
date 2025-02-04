@@ -1,5 +1,4 @@
 #include "conveyor.h"
-#include "globals.h"
 
 namespace conveyor{
 

@@ -1,5 +1,4 @@
 #include "clamp.h"
-#include "globals.h"
 
 namespace clamp{
 

@@ -1,5 +1,4 @@
 #include "arm.h"
-#include "globals.h"
 
 namespace arm{
 
