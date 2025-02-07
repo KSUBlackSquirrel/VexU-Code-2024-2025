@@ -1,10 +1,17 @@
-#ifndef _CONVEYOR_H_
-#define _CONVEYOR_H_
+#ifndef CONVEYOR_H_
+#define CONVEYOR_H_
 
 #include "lemlib/api.hpp"
 #include "globals.h"
 
 namespace conveyor{
+
+enum STATE{
+    RUNNING,
+    INVERTED,
+    STOP,
+    STUCK
+};
 
 void init();
 
@@ -13,8 +20,8 @@ void conveyorDown();
 void conveyorStop();
 
 
-// drive controls
-void opcontrol(pros::Controller& controller);
+void command(STATE state);\
+void running();
 
 }
 

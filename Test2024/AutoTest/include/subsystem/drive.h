@@ -1,5 +1,5 @@
-#ifndef _DRIVE_H_
-#define _DRIVE_H_
+#ifndef DRIVE_H_
+#define DRIVE_H_
 
 #include "lemlib/api.hpp"
 #include "globals.h"
@@ -13,7 +13,7 @@ lemlib::Pose pos();
 void autonomous();
 
 // drive controls
-void opcontrol(pros::Controller& controller);
+void tankDrive(pros::Controller& controller, bool inverted = false);
 
 }
 

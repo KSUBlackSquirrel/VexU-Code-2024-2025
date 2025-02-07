@@ -2,7 +2,8 @@
 
 namespace arm{
 
-pros::Motor armMotor(globalArm::armMotorID, globalArm::armColor);
+pros::Motor armMotor(-globalArm::armMotorID, globalArm::armColor);
+STATE currentState = STOP;
 
 void init() {
     armMotor.tare_position(); // sets the position of the arm to 0
@@ -15,19 +16,27 @@ void armUp() {
 void armDown() {
     armMotor.move_velocity(-100);
 }
+void armStop() {
+    armMotor.brake();
+}
 
-void print(pros::Controller& controller) {
-    controller.print(0, 0, "arm pos: %d", armMotor.get_position());
+
+void command(STATE state) {
+    currentState = state;
 }
 
 // drive controls
-void opcontrol(pros::Controller& controller) {
-    if(controller.get_digital(globalArm::controllerMoveUp)){
-        armUp();
-    } else if(controller.get_digital(globalArm::controllerMoveDown)){
-        armDown();
-    } else {
-        armMotor.move_velocity(0);
+void running() {
+    switch(currentState) {
+        case FORWARD:
+            armUp();
+            break;
+        case BACKWARD:
+            armDown();
+            break;
+        case STOP:
+            armMotor.move_velocity(0);
+            break;
     }
 }
 

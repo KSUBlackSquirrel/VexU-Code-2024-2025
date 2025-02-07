@@ -119,12 +119,11 @@ void autonomous(){
     // chassis.follow(example2_txt, 15, 2000, false);
 }
 
-void opcontrol(pros::Controller& controller){
+void tankDrive(pros::Controller& controller, bool inverted){
     // move the robot
-    chassis.tank(controller.get_analog(globalDrive::leftStickY), controller.get_analog(globalDrive::rightStickY));
-
-    // delay to save resources
-    pros::delay(25);
+    chassis.tank(
+        inverted ? -controller.get_analog(globalDrive::rightStickY) : controller.get_analog(globalDrive::leftStickY),
+        inverted ?  -controller.get_analog(globalDrive::leftStickY) : controller.get_analog(globalDrive::rightStickY));
 }
 
 

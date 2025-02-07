@@ -5,19 +5,31 @@
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
 
-/**
- * A callback function for LLEMU's center button.
- *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
- */
-void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
+void configureBindings() {
+	// clamp controls
+	if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
+		clamp::toggle();
+	}
+
+	if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)){
+		conveyor::command(conveyor::RUNNING);
+		intake::command(intake::RUNNING);
+	}
+	if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)){
+		conveyor::command(conveyor::INVERTED);
+		intake::command(intake::INVERTED);
+	}
+	if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
+		conveyor::command(conveyor::STOP);
+		intake::command(intake::STOP);
+	}
+
+	if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
+		arm::command(arm::FORWARD);
+	} else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+		arm::command(arm::BACKWARD);
 	} else {
-		pros::lcd::clear_line(2);
+		arm::command(arm::STOP);
 	}
 }
 
@@ -27,30 +39,12 @@ void on_center_button() {
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
-void initialize() {
-    pros::lcd::initialize(); // initialize brain screen
-	
+void initialize() {	
 	drive::init();
 	arm::init();
 	clamp::init();
 	intake::init();
 	conveyor::init();
-
-	// print position to brain screen
-	pros::Task screen_task([&]() {
-		while (true) {
-			arm::print(controller);
-
-			// print robot location to the brain screen
-			pros::lcd::print(0, "X: %f", drive::pos().x); // x
-			pros::lcd::print(1, "Y: %f", drive::pos().y); // y
-			pros::lcd::print(2, "Theta: %f", drive::pos().theta); // heading
-			// delay to save resources
-			pros::delay(20);
-		}
-    });
-
-	pros::lcd::register_btn1_cb(on_center_button);
 }
 
 /**
@@ -100,13 +94,28 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-
-	while (true) {
-		drive::opcontrol(controller);
-		arm::opcontrol(controller);
-		clamp::opcontrol(controller);
-		intake::opcontrol(controller);
-		conveyor::opcontrol(controller);
-		pros::delay(20);
-	}
+	pros::Task drive_task([&]() {
+		while (true) {
+			// drive the robot
+			drive::tankDrive(controller, controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)==1);
+			// delay to save resources
+			pros::delay(20);
+		}
+    });
+	pros::Task button_task([&]() {
+		while (true) {
+			// listen for defined buttons pressed
+			configureBindings();
+			// delay to save resources
+			pros::delay(20);
+		}
+    });
+	pros::Task running_task([&]() {
+		while (true) {
+			conveyor::running();
+			intake::running();
+			arm::running();
+			pros::delay(20);
+		}
+    });
 }

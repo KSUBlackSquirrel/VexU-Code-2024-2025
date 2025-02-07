@@ -1,5 +1,5 @@
-#ifndef _CLAMP_H_
-#define _CLAMP_H_
+#ifndef CLAMP_H_
+#define CLAMP_H_
 
 #include "lemlib/api.hpp"
 #include "globals.h"
