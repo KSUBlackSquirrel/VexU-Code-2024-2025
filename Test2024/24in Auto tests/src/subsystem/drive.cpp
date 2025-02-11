@@ -1,5 +1,4 @@
 #include "drive.h"
-#include "globals.h"
 
 // 15 right motor id 12,13 | left drive motor id 19,20 | imu id 5 | wheel diameter NEW_325 | wheel track 11.625 | width 14 | lenght 14.55 | wheel rpm 400
 // 24  motor id  |  drive motor id  | imu id  | wheel diameter NEW_325 | wheel track 13.625 | width 16 | lenght 18.235 | wheel rpm 400
@@ -123,16 +122,11 @@ void autonomous(){
     //}
 }
 
-void opcontrol(pros::Controller& controller){
-    // get left y and right y positions
-    int leftY = controller.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-    int rightY = controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
-
+void tankDrive(pros::Controller& controller, bool inverted){
     // move the robot
-    chassis.tank(leftY, rightY);
-
-    // delay to save resources
-    pros::delay(25);
+    chassis.tank(
+        inverted ? -controller.get_analog(globalDrive::rightStickY) : controller.get_analog(globalDrive::leftStickY),
+        inverted ?  -controller.get_analog(globalDrive::leftStickY) : controller.get_analog(globalDrive::rightStickY));
 }
 
 

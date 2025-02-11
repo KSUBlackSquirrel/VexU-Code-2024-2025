@@ -1,37 +1,41 @@
 #include "main.h"
+#include "lemlib/api.hpp" // IWYU pragma: keep
+
 
 pros::Controller controller(pros::E_CONTROLLER_MASTER);
 
-/**
- * A callback function for LLEMU's center button.
- *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
- */
-void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
+
+void configureBindings() {
+	// clamp controls
+	if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){
+		clamp::toggle();
+	}
+
+	if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)){
+		conveyor::command(conveyor::RUNNING);
+		intake::command(intake::RUNNING);
+	}
+	if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)){
+		conveyor::command(conveyor::INVERTED);
+		intake::command(intake::INVERTED);
+	}
+	if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
+		conveyor::command(conveyor::STOP);
+		intake::command(intake::STOP);
 	}
 }
 
 /**
- * Runs initialization code. This occurs as soon as the program is started.  
+ * Runs initialization code. This occurs as soon as the program is started.
  *
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
-void initialize() {
-	pros::lcd::initialize();
-
+void initialize() {	
 	drive::init();
-
-	pros::lcd::set_text(1, "Hello PROS User!");
-
-	pros::lcd::register_btn1_cb(on_center_button);
+	clamp::init();
+	intake::init();
+	conveyor::init();
 }
 
 /**
@@ -62,7 +66,7 @@ void competition_initialize() {}
  * If the robot is disabled or communications is lost, the autonomous task
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
- */
+ */// ASSET(example2_txt)
 void autonomous() {
 	drive::autonomous();
 }
@@ -81,10 +85,27 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	drive::autonomous();
-	// while(true){
-	// 	drive::opcontrol(controller);
-	// 	pros::delay(20);
-
-	// }
+	pros::Task drive_task([&]() {
+		while (true) {
+			// drive the robot
+			drive::tankDrive(controller, controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)==1);
+			// delay to save resources
+			pros::delay(20);
+		}
+    });
+	pros::Task button_task([&]() {
+		while (true) {
+			// listen for defined buttons pressed
+			configureBindings();
+			// delay to save resources
+			pros::delay(20);
+		}
+    });
+	pros::Task running_task([&]() {
+		while (true) {
+			conveyor::running();
+			intake::running();
+			pros::delay(20);
+		}
+    });
 }

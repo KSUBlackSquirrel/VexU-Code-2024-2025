@@ -115,10 +115,9 @@ void DriveSubsystem::autonomous() {
     // chassis.follow(example2_txt, 15, 2000, false);
 }
 
-void DriveSubsystem::periodic() {
+void DriveSubsystem::tankDrive(pros::Controller& controller, bool inverted){
     // move the robot
     chassis.tank(
-        globalControl::controller.get_analog(globalDrive::leftStickY),
-        globalControl::controller.get_analog(globalDrive::rightStickY)
-    );
+        inverted ? -controller.get_analog(globalDrive::rightStickY) : controller.get_analog(globalDrive::leftStickY),
+        inverted ?  -controller.get_analog(globalDrive::leftStickY) : controller.get_analog(globalDrive::rightStickY));
 }

@@ -1,18 +1,17 @@
-#ifndef CONVEYOR_SUBSYSTEM_H_
-#define CONVEYOR_SUBSYSTEM_H_
+#ifndef CONVEYOR_SUBSYSTEM_H
+#define CONVEYOR_SUBSYSTEM_H
 
-#include "lemlib/api.hpp"
 #include "subsystem/Subsystem.h"
-#include "Globals.h"
 
 class ConveyorSubsystem : public Subsystem {
     public:
         ConveyorSubsystem();
 
-        void conveyorUp();
-        void conveyorDown();
+        void conveyorUp(int speed = 500);
+        void conveyorDown(int speed = 500);
         void conveyorStop();
-
+    
+    private:
         pros::Motor conveyorMotor;
 };
 

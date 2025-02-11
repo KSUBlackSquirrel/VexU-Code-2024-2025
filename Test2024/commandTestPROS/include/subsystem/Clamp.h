@@ -1,9 +1,7 @@
-#ifndef CLAMP_SUBSYSTEM_H_
-#define CLAMP_SUBSYSTEM_H_
+#ifndef CLAMP_SUBSYSTEM_H
+#define CLAMP_SUBSYSTEM_H
 
-#include "lemlib/api.hpp"
 #include "subsystem/Subsystem.h"
-#include "Globals.h"
 
 class ClampSubsystem : public Subsystem {
     public:
@@ -13,7 +11,8 @@ class ClampSubsystem : public Subsystem {
             globalClamp::pneumaticsState = !globalClamp::pneumaticsState;
             pneumatic.set_value(globalClamp::pneumaticsState);
         };
-
+    
+    private:
         pros::adi::DigitalOut pneumatic;
 };
 

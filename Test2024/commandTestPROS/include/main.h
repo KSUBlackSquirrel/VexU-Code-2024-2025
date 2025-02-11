@@ -50,9 +50,8 @@
 #include "subsystem/Subsystem.h"
 
 //commands
-#include "command/Scheduler.h"
+#include "Scheduler.h"
 #include "command/Command.h"
-#include "command/InstantCommand.h"
 #include "command/Arm.h"
 
 //other

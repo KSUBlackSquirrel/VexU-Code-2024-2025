@@ -23,4 +23,30 @@ const static int horizontalDrift = 2;
 const static int imuID = 2;
 } // namespace drive
 
+namespace globalIntake {
+const static std::int8_t intakeMotorID = 3;
+const static pros::v5::MotorGears intakeColor = pros::MotorGearset::blue;
+
+static pros::controller_digital_e_t controllerMoveUp = pros::E_CONTROLLER_DIGITAL_L1;
+static pros::controller_digital_e_t controllerMoveDown = pros::E_CONTROLLER_DIGITAL_L2;
+
+} // namespace intake
+
+namespace globalConveyor {
+const static std::int8_t conveyorMotorID = 4;
+const static pros::v5::MotorGears conveyorColor = pros::MotorGearset::blue;
+
+const static pros::controller_digital_e_t controllerMoveUp = pros::E_CONTROLLER_DIGITAL_R2;
+const static pros::controller_digital_e_t controllerMoveDown = pros::E_CONTROLLER_DIGITAL_R1;
+
+} // namespace outtake
+
+namespace globalClamp {
+const static char pneumaticsID = 'F';
+
+const static pros::controller_digital_e_t pneumaticsButton = pros::E_CONTROLLER_DIGITAL_X;
+static bool pneumaticsState = false;
+
+} // namespace clamp
+
 #endif

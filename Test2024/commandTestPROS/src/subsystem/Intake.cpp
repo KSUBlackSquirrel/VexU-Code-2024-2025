@@ -6,11 +6,11 @@ IntakeSubsystem::IntakeSubsystem() : intakeMotor(globalIntake::intakeMotorID, gl
 }
 
 
-void IntakeSubsystem::IntakeUp(int speed) {
-    intakeMotor.move(speed);
+void IntakeSubsystem::IntakeUp(int speed = 600) {
+    intakeMotor.move_velocity(speed);
 }
-void IntakeSubsystem::IntakeDown(int speed) {
-    intakeMotor.move(-speed);
+void IntakeSubsystem::IntakeDown(int speed = 600) {
+    intakeMotor.move_velocity(-speed);
 }
 void IntakeSubsystem::IntakeStop() {
     intakeMotor.brake();

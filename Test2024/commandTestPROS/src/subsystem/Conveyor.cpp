@@ -5,11 +5,11 @@ ConveyorSubsystem::ConveyorSubsystem() : conveyorMotor(globalConveyor::conveyorM
     conveyorMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 }
 
-void ConveyorSubsystem::conveyorUp() {
-    conveyorMotor.move(127);
+void ConveyorSubsystem::conveyorUp(int speed = 500) {
+    conveyorMotor.move_velocity(speed);
 }
-void ConveyorSubsystem::conveyorDown() {
-    conveyorMotor.move(-127);
+void ConveyorSubsystem::conveyorDown(int speed = 500) {
+    conveyorMotor.move_velocity(-speed);
 }
 void ConveyorSubsystem::conveyorStop() {
     conveyorMotor.brake();

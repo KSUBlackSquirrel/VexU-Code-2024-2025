@@ -1,35 +1,46 @@
-#ifndef COMMAND_H_
-#define COMMAND_H_
+#ifndef COMMAND_H
+#define COMMAND_H
 
-#include "subsystem/Subsystem.h"
-#include <string>
+#include "main.h"
+#include "lemlib/api.hpp"
+#include "globals.h"
 
 class Command {
-    public:
-        Command() {};
-        Command(Subsystem subsystem) : m_subsystem(subsystem) {};
-
-        // Called when the command is initially scheduled.
-        void initialize() {};
-        // Called every time the scheduler runs while the command is scheduled.
-        void execute() {};
-        // Called once the command ends or is interrupted.
-        void end(bool interrupted) {};
-        // Returns true when the command should end.
-        bool isFinished() {return false;};
-
-        void interrupt() {interrupted = true;};
-        bool getInterrupted() {return interrupted;};
-        // std::string getName() {return __func__ ;};
-
-        Subsystem getSubsystem() {return m_subsystem;};
-
+    protected:
+        static Command* instance;
+        bool interrupted;
         Subsystem m_subsystem;
-        
-    protected:        
-        
-        bool interrupted = false;
+
+        // Protected constructor to enforce singleton
+        Command(Subsystem& subsystem) : m_subsystem(subsystem), interrupted(false) {}
+
+    public:
+        // Singleton instance creation
+        static Command* newCommand(Subsystem& subsystem) {
+            if (!instance) {
+                instance = new Command(subsystem);
+            }
+            return instance;
+        }
+
+        static void destroyInstance() {
+            delete instance;
+            instance = nullptr;
+        }
+
+        // Command lifecycle methods
+        virtual void initialize() {}
+        virtual void execute() {}
+        virtual void end(bool interrupted) {}
+        virtual bool isFinished() {return false;}
+
+        void interrupt() {interrupted = true;}
+        bool getInterrupted() const {return interrupted;}
+
+        Subsystem getSubsystem() const {return m_subsystem;}
 };
 
+// Initialize the static member
+Command* Command::instance = nullptr;
 
 #endif

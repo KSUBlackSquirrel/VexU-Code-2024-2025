@@ -1,20 +1,37 @@
-#ifndef ARM_COMMAND_H_
-#define ARM_COMMAND_H_
+#ifndef ARM_COMMAND_H
+#define ARM_COMMAND_H
 
 #include "command/Command.h"
-#include "subsystem/Arm.h"
+
 
 class ArmCommand : public Command {
+    protected:
+        static ArmCommand* instance;
+
+        // Protected constructor to enforce singleton
+        ArmCommand(ArmSubsystem& subsystem) : Command(subsystem) {}
+
     public:
-        ArmCommand(ArmSubsystem subsystem) : Command(), m_subsystem(subsystem) {};
+        // Singleton instance creation for ArmCommand
+        static ArmCommand* createInstance(ArmSubsystem& subsystem) {
+            if (!instance) {
+                instance = new ArmCommand(subsystem);
+            }
+            return instance;
+        }
 
-        void initialize();
-        void execute();
-        void end(bool interrupted);
-        bool isFinished();
+        static void destroyInstance() {
+            delete instance;
+            instance = nullptr;
+        }
 
-        ArmSubsystem m_subsystem;
+        void initialize() override;
+        void execute() override;
+        void end(bool interrupted) override;
+        bool isFinished() override;
 };
 
+// Initialize the static member
+ArmCommand* ArmCommand::instance = nullptr;
 
 #endif
