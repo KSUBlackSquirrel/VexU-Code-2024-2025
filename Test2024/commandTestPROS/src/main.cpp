@@ -15,18 +15,22 @@ ClampSubsystem clampSubsystem = ClampSubsystem();
 void configureBindings() {
 	// scheduler.addCommand(DriveCommand(driveSubsystem));
 	
-	pros::Task screen_task([&]() {
-		while (true) {
-			if (globalControl::controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-				scheduler.addCommand(InstantCommand([&]() { clampSubsystem.toggle(); }));
-			}
-			// if (globalControl::controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
-			// 	scheduler.addCommand(ArmCommand(armSubsystem));
-			// }
+	// pros::Task screen_task([&]() {
+	// 	while (true) {
+	// 		if (globalControl::controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+	// 			scheduler.addCommand(InstantCommand([&]() { clampSubsystem.toggle(); }));
+	// 		}
+	// 		// if (globalControl::controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)) {
+	// 		// 	scheduler.addCommand(ArmCommand(armSubsystem));
+	// 		// }
 		
 		
-		}
-	});
+	// 	}
+	// });
+
+	if (globalControl::controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+		scheduler.add(ArmCommand::newCommand(armSubsystem));
+	}
 }
 
 /**
@@ -36,19 +40,25 @@ void configureBindings() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-    pros::lcd::initialize(); // initialize brain screen
-
-	// print position to brain screen
-	pros::Task screen_task([&]() {
+	pros::Task scheduler_task([&]() {
 		while (true) {
-			// print robot location to the brain screen
-			pros::lcd::print(0, "X: %f", driveSubsystem.pos().x); // x
-			pros::lcd::print(1, "Y: %f", driveSubsystem.pos().y); // y
-			pros::lcd::print(2, "Theta: %f", driveSubsystem.pos().theta); // heading
-			// delay to save resources
+			scheduler.run();
 			pros::delay(20);
 		}
     });
+    // pros::lcd::initialize(); // initialize brain screen
+
+	// // print position to brain screen
+	// pros::Task screen_task([&]() {
+	// 	while (true) {
+	// 		// print robot location to the brain screen
+	// 		pros::lcd::print(0, "X: %f", driveSubsystem.pos().x); // x
+	// 		pros::lcd::print(1, "Y: %f", driveSubsystem.pos().y); // y
+	// 		pros::lcd::print(2, "Theta: %f", driveSubsystem.pos().theta); // heading
+	// 		// delay to save resources
+	// 		pros::delay(20);
+	// 	}
+    // });
 }
 
 /**
@@ -56,7 +66,9 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled() {
+	scheduler.clear();
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
@@ -98,10 +110,23 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	scheduler.clear();
 
-
-	while (true) {
-		scheduler.run();
-		pros::delay(20);
-	}
+	pros::Task drive_task([&]() {
+		while (true) {
+			// drive the robot
+			driveSubsystem.tankDrive(globalControl::controller, globalControl::controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)==1);
+			// delay to save resources
+			pros::delay(20);
+		}
+    });
+	pros::Task button_task([&]() {
+		while (true) {
+			// listen for defined buttons pressed
+			configureBindings();
+			// delay to save resources
+			pros::delay(20);
+		}
+    });
+	
 }

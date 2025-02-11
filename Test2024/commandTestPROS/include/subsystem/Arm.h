@@ -1,9 +1,7 @@
-#ifndef ARM_SUBSYSTEM_H_
-#define ARM_SUBSYSTEM_H_
+#ifndef ARM_SUBSYSTEM_H
+#define ARM_SUBSYSTEM_H
 
-#include "lemlib/api.hpp"
 #include "subsystem/Subsystem.h"
-#include "Globals.h"
 
 class ArmSubsystem : public Subsystem {
     public:
@@ -14,8 +12,9 @@ class ArmSubsystem : public Subsystem {
 
         void print();
 
-        void periodic();
-
+        void periodic() override;
+    
+    private:
         pros::Motor armMotor;
 };
 

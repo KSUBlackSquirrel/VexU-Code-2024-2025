@@ -41,7 +41,13 @@
  */
 //#include "okapi/api.hpp"
 
+//subsystems
 #include "subsystem/drive.h"
+#include "subsystem/intake.h"
+#include "subsystem/clamp.h"
+#include "subsystem/conveyor.h"
+
+//other
 #include "globals.h"
 
 

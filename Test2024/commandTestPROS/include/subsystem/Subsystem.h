@@ -1,13 +1,16 @@
-#ifndef SUBSYSTEM_SUBSYSTEM_H_
-#define SUBSYSTEM_SUBSYSTEM_H_
+#ifndef SUBSYSTEM_SUBSYSTEM_H
+#define SUBSYSTEM_SUBSYSTEM_H
 
+#include "main.h"
+#include "lemlib/api.hpp"
+#include "globals.h"
 
 class Subsystem {
     public:
         Subsystem() {};
 
         // This method is called periodically by the Scheduler.
-        void periodic() {};
+        virtual void periodic() {};
 };
 
 

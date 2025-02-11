@@ -1,18 +1,17 @@
-#ifndef INTAKE_SUBSYSTEM_H_
-#define INTAKE_SUBSYSTEM_H_
+#ifndef INTAKE_SUBSYSTEM_H
+#define INTAKE_SUBSYSTEM_H
 
-#include "lemlib/api.hpp"
 #include "subsystem/Subsystem.h"
-#include "Globals.h"
 
 class IntakeSubsystem : public Subsystem {
     public:
         IntakeSubsystem();
 
-        void IntakeUp(int speed);
-        void IntakeDown(int speed);
+        void IntakeUp(int speed = 600);
+        void IntakeDown(int speed = 600);
         void IntakeStop();
 
+    private:
         pros::Motor intakeMotor;
 };
 

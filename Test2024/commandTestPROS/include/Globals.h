@@ -1,5 +1,5 @@
-#ifndef GLOBALS_H_
-#define GLOBALS_H_
+#ifndef GLOBALS_H
+#define GLOBALS_H
 
 #include "lemlib/api.hpp"
 

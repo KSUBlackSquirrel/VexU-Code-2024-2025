@@ -2,6 +2,7 @@
 #define _DRIVE_H_
 
 #include "lemlib/api.hpp"
+#include "globals.h"
 
 namespace drive{
 
@@ -12,7 +13,7 @@ lemlib::Pose pos();
 void autonomous();
 
 // drive controls
-void opcontrol(pros::Controller& controller);
+void tankDrive(pros::Controller& controller, bool inverted = false);
 
 }
 
