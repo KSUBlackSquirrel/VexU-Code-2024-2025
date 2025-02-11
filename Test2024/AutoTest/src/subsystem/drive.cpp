@@ -103,20 +103,35 @@ void autonomous(){
 	// chassis.turnToHeading(90, 1000000);
 
 	// Tune Linear PID     
-	// set position to x:0, y:0, heading:0
+	// set position to x:0, y:0, heading:0s
 	// chassis.setPose(0, 0, 0);
 	// move 48" forwards
 	// chassis.moveToPoint(0, 48, 100000);
 
 	// set chassis pose
-    chassis.setPose(-39, 39, 180);
+    chassis.setPose(-36, 36, 180);
     // lookahead distance: 15 inches
 	// If you want the robot to follow the path more closely, decrease the lookahead distance
 	// If you want the robot to follow the path more loosely, but faster, then increase the lookahead distance
     // timeout: 2000 ms
+
     chassis.follow(path_txt, 6, 20000);
+    
+    chassis.turnToHeading(180, 10000);
+
+    pros::delay(1000);
+
+    chassis.setPose(0, 0, 0);
+    chassis.turnToHeading(180, 10000);
+
+    pros::delay(1000);
+
+    chassis.setPose(-36, 36, 180);
+    chassis.follow(path_txt, 6, 20000);
+    chassis.turnToHeading(180, 20000);
+
     // follow the next path, but with the robot going backwards
-    // chassis.follow(example2_txt, 15, 2000, false);
+    //chassis.follow(example2_txt, 15, 2000, false);
 }
 
 void tankDrive(pros::Controller& controller, bool inverted){

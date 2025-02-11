@@ -40,11 +40,24 @@ void configureBindings() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {	
+	pros::lcd::initialize(); // initialize brain screen
+
 	drive::init();
 	arm::init();
 	clamp::init();
 	intake::init();
 	conveyor::init();
+
+	pros::Task screen_task([&]() {
+		while (true) {
+			// print robot location to the brain screen
+			pros::lcd::print(0, "X: %f", drive::pos().x); // x
+			pros::lcd::print(1, "Y: %f", drive::pos().y); // y
+			pros::lcd::print(2, "Theta: %f", drive::pos().theta); // heading
+			// delay to save resources
+			pros::delay(20);
+		}
+    });
 }
 
 /**
