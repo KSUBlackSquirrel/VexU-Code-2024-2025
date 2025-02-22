@@ -93,7 +93,7 @@ lemlib::Pose pos(){
     return chassis.getPose();
 }
 
-ASSET(path_txt);
+ASSET(BigBotStart_txt);
 void autonomous(){
     // Tune Angular PID
 	//while(true){
@@ -107,7 +107,11 @@ void autonomous(){
 	// set position to x:0, y:0, heading:0
 	 chassis.setPose(0, 0, 0);
 	// move 48" forwards
-	 chassis.moveToPoint(0, 48, 100000);
+    intake::IntakeUp();
+    chassis.follow(BigBotStart_txt, 6, 20000);
+    convayor::IntakeUp();
+    pros::delay(400);
+
 
 	// set chassis pose
     //chassis.setPose(-39, 39, 180);
@@ -118,7 +122,6 @@ void autonomous(){
     //chassis.follow(path_txt, 6, 20000);
     // follow the next path, but with the robot going backwards
     // chassis.follow(example2_txt, 15, 2000, false);
-    pros::delay(4000);
     //}
 }
 

@@ -3,6 +3,10 @@
 
 #include "lemlib/api.hpp"
 #include "globals.h"
+#include "conveyor.h"
+#include "clamp.h"
+#include "arm.h"
+#include "intake.h"
 
 namespace drive{
 
