@@ -45,7 +45,6 @@
 #include "subsystem/drive.h"
 #include "subsystem/intake.h"
 #include "subsystem/clamp.h"
-#include "subsystem/arm.h"
 #include "subsystem/conveyor.h"
 
 //other

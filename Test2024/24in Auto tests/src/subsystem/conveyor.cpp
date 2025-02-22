@@ -32,9 +32,9 @@ void running() {
     switch(currentState){
         case RUNNING:
             IntakeUp();
-            if (conveyorMotor.get_efficiency() == 0) { //TODO
-                currentState = STUCK;
-            }
+            // if (conveyorMotor.get_efficiency() == 0) { //TODO
+            //     currentState = STUCK;
+            // }
             break;
         case INVERTED:
             IntakeDown();

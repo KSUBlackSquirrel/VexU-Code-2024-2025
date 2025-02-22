@@ -49,13 +49,4 @@ static bool pneumaticsState = false;
 
 } // namespace clamp
 
-namespace globalArm {
-const static std::int8_t armMotorID = 7;
-const static pros::MotorGears armColor = pros::MotorGearset::green;
-
-const static pros::controller_digital_e_t controllerMoveUp = pros::E_CONTROLLER_DIGITAL_UP;
-const static pros::controller_digital_e_t controllerMoveDown = pros::E_CONTROLLER_DIGITAL_DOWN;
-
-} // namespace arm
-
 #endif

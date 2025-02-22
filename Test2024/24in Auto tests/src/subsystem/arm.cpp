@@ -11,10 +11,10 @@ void init() {
 }
 
 void armUp() {
-    armMotor.move_velocity(100);
+    armMotor.move_velocity(50);
 }
 void armDown() {
-    armMotor.move_velocity(-100);
+    armMotor.move_velocity(-50);
 }
 void armStop() {
     armMotor.brake();

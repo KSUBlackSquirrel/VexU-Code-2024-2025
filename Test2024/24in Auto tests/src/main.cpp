@@ -11,17 +11,41 @@ void configureBindings() {
 		clamp::toggle();
 	}
 
-	if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)){
-		conveyor::command(conveyor::RUNNING);
-		intake::command(intake::RUNNING);
-	}
-	if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)){
+	// if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)){
+	// 	conveyor::command(conveyor::RUNNING);
+	// 	intake::command(intake::RUNNING);
+	// }
+	// if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)){
+	// 	conveyor::command(conveyor::INVERTED);
+	// 	intake::command(intake::INVERTED);
+	// }
+	// if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
+	// 	conveyor::command(conveyor::STOP);
+	// 	intake::command(intake::STOP);
+	// }
+
+	if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
 		conveyor::command(conveyor::INVERTED);
-		intake::command(intake::INVERTED);
-	}
-	if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){
+	}else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
+		conveyor::command(conveyor::RUNNING);
+	} else {
 		conveyor::command(conveyor::STOP);
+	}
+	
+	if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
+		intake::command(intake::RUNNING);
+	} else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
+		intake::command(intake::INVERTED);
+	} else {
 		intake::command(intake::STOP);
+	}
+
+	if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)){
+		arm::command(arm::FORWARD);
+	} else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)){
+		arm::command(arm::BACKWARD);
+	} else {
+		arm::command(arm::STOP);
 	}
 }
 
@@ -35,6 +59,7 @@ void initialize() {
 	drive::init();
 	clamp::init();
 	intake::init();
+	arm::init();
 	conveyor::init();
 }
 
@@ -88,7 +113,7 @@ void opcontrol() {
 	pros::Task drive_task([&]() {
 		while (true) {
 			// drive the robot
-			drive::tankDrive(controller, controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)==1);
+			drive::tankDrive(controller, false/*controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)==1*/);
 			// delay to save resources
 			pros::delay(20);
 		}
@@ -105,6 +130,7 @@ void opcontrol() {
 		while (true) {
 			conveyor::running();
 			intake::running();
+			arm::running();
 			pros::delay(20);
 		}
     });
