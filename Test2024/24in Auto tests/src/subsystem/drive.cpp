@@ -107,9 +107,9 @@ void autonomous(){
 	// set position to x:0, y:0, heading:0
 	 chassis.setPose(0, 0, 0);
 	// move 48" forwards
-    intake::IntakeUp();
+    intake::IntakeUp(600);
+    convayor::conveyoreUp(500);
     chassis.follow(BigBotStart_txt, 6, 20000);
-    convayor::IntakeUp();
     pros::delay(400);
 
 

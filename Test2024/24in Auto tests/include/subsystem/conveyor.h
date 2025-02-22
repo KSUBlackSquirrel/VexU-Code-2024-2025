@@ -15,8 +15,8 @@ enum STATE{
 
 void init();
 
-void conveyorUp();
-void conveyorDown();
+void conveyorUp(int velocity);
+void conveyorDown(int velocity);
 void conveyorStop();
 
 
