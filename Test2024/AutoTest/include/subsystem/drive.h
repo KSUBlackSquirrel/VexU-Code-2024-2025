@@ -2,6 +2,7 @@
 #define DRIVE_H_
 
 #include "lemlib/api.hpp"
+#include "clamp.h"
 #include "globals.h"
 
 namespace drive{

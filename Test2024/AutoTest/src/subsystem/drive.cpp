@@ -94,19 +94,13 @@ lemlib::Pose pos(){
     return chassis.getPose();
 }
 
-ASSET(path_txt);
-void autonomous(){
-    // Tune Angular PID
-	// set position to x:0, y:0, heading:0
-	// chassis.setPose(0, 0, 0);
-	// turn to face heading 90 with a very long timeout
-	// chassis.turnToHeading(90, 1000000);
+ASSET(sPath_txt);
+ASSET(forward1_txt);
+ASSET(quartCir1_txt);
+ASSET(quartCir2_txt);
 
-	// Tune Linear PID     
-	// set position to x:0, y:0, heading:0s
-	// chassis.setPose(0, 0, 0);
-	// move 48" forwards
-	// chassis.moveToPoint(0, 48, 100000);
+
+void s_loop(){
 
 	// set chassis pose
     chassis.setPose(-36, 36, 180);
@@ -115,23 +109,86 @@ void autonomous(){
 	// If you want the robot to follow the path more loosely, but faster, then increase the lookahead distance
     // timeout: 2000 ms
 
-    chassis.follow(path_txt, 6, 20000);
+    chassis.follow(sPath_txt, 6, 20000);
     
-    chassis.turnToHeading(180, 10000);
+    chassis.turnToHeading(180, 1000);
 
     pros::delay(1000);
 
     chassis.setPose(0, 0, 0);
-    chassis.turnToHeading(180, 10000);
+    chassis.turnToHeading(180, 1000);
 
     pros::delay(1000);
 
     chassis.setPose(-36, 36, 180);
-    chassis.follow(path_txt, 6, 20000);
-    chassis.turnToHeading(180, 20000);
+    chassis.follow(sPath_txt, 6, 20000);
+    chassis.turnToHeading(180, 2000);
+}
+
+void quartCir1(){
+
+	// set chassis pose
+    chassis.setPose(0, 0, 0);
+    // lookahead distance: 15 inches
+	// If you want the robot to follow the path more closely, decrease the lookahead distance
+	// If you want the robot to follow the path more loosely, but faster, then increase the lookahead distance
+    // timeout: 2000 ms
+
+    chassis.follow(quartCir1_txt, 6, 20000, true);
+    clamp::toggle();
+    chassis.follow(quartCir2_txt, 6, 20000, false);
+}
+
+ASSET(idea1'1_txt);
+ASSET(idea1'2_txt);
+ASSET(idea1'3_txt);
+
+void idea1(){
+
+	// set chassis pose
+    chassis.setPose(-64, 36, 0);
+    // lookahead distance: 15 inches
+	// If you want the robot to follow the path more closely, decrease the lookahead distance
+	// If you want the robot to follow the path more loosely, but faster, then increase the lookahead distance
+    // timeout: 2000 ms
+
+    chassis.follow(quartCir1_txt, 6, 20000, true);
+    chassis.follow(quartCir2_txt, 6, 20000, false);
+    chassis.follow(quartCir1_txt, 6, 20000, true);
+}
+
+void autonomous(){
+    // Tune Angular PID
+	// set position to x:0, y:0, heading:0
+	// chassis.setPose(0, 0, 0);
+	// turn to face heading 90 with a very long timeout
+	// chassis.turnToHeading(90, 1000000);
+
+//*******for easy standard, set all paths to start at possition 0,0 with heading 0, and rotate path acordingly */
+
+    // chassis.setPose(0, 0, 0);
+    // chassis.follow(forward1_txt, 6, 20000, true);
+    // pros::delay(1000);
+    // chassis.setPose(0, 0, 180);
+
+    // //chassis.turnToHeading(180, 1000);
+
+    // pros::delay(1000);
+
+    // chassis.follow(forward1_txt, 6, 20000, false);
+
+
+
+	// Tune Linear PID     
+	// set position to x:0, y:0, heading:0s
+	// chassis.setPose(0, 0, 0);
+	// move 48" forwards
+	// chassis.moveToPoint(0, 48, 100000);
+
 
     // follow the next path, but with the robot going backwards
     //chassis.follow(example2_txt, 15, 2000, false);
+    quartCir1();
 }
 
 void tankDrive(pros::Controller& controller, bool inverted){
