@@ -10,13 +10,13 @@ void init() {
 }
 
 
-void IntakeUp(int velocity) {
+void intakeUp(int velocity) {
     intakeMotor.move_velocity(velocity);
 }
-void IntakeDown(int velocity) {
+void intakeDown(int velocity) {
     intakeMotor.move_velocity(-velocity);
 }
-void IntakeStop() {
+void intakeStop() {
     intakeMotor.brake();
 }
 
@@ -28,13 +28,13 @@ void command(STATE state) {
 void running() {
     switch(currentState) {
         case RUNNING:
-            IntakeUp(600);
+            intakeUp(600);
             break;
         case INVERTED:
-            IntakeDown(600);
+            intakeDown(600);
             break;
         case STOP:
-            IntakeStop();
+            intakeStop();
             break;
     }
 }

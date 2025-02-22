@@ -15,12 +15,11 @@ enum STATE{
 
 void init();
 
-void conveyorUp();
-void conveyorDown();
+void conveyorUp(int velocity);
+void conveyorDown(int velocity);
 void conveyorStop();
 
-
-void command(STATE state);\
+void command(STATE state);
 void running();
 
 }

@@ -65,7 +65,7 @@ lemlib::ControllerSettings lateral_controller(
 lemlib::ControllerSettings angular_controller(
     5, // proportional gain (kP)
     0, // integral gain (kI)
-    45, // derivative gain (kD)
+    54, // derivative gain (kD)
     0, // anti windup
     1, // small error range, in degrees
     100, // small error range timeout, in milliseconds
@@ -94,98 +94,125 @@ lemlib::Pose pos(){
     return chassis.getPose();
 }
 
-ASSET(sPath_txt);
-ASSET(forward1_txt);
-ASSET(quartCir1_txt);
-ASSET(quartCir2_txt);
+// ASSET(sPath_txt);
+// ASSET(forward1_txt);
+// ASSET(quartCir1_txt);
+// ASSET(quartCir2_txt);
 
 
-void s_loop(){
+// void s_loop(){
 
-	// set chassis pose
-    chassis.setPose(-36, 36, 180);
-    // lookahead distance: 15 inches
-	// If you want the robot to follow the path more closely, decrease the lookahead distance
-	// If you want the robot to follow the path more loosely, but faster, then increase the lookahead distance
-    // timeout: 2000 ms
+// 	// set chassis pose
+//     chassis.setPose(-36, 36, 180);
+//     // lookahead distance: 15 inches
+// 	// If you want the robot to follow the path more closely, decrease the lookahead distance
+// 	// If you want the robot to follow the path more loosely, but faster, then increase the lookahead distance
+//     // timeout: 2000 ms
 
-    chassis.follow(sPath_txt, 6, 20000);
+//     chassis.follow(sPath_txt, 6, 20000);
     
-    chassis.turnToHeading(180, 1000);
+//     chassis.turnToHeading(180, 1000);
 
-    pros::delay(1000);
+//     pros::delay(1000);
 
-    chassis.setPose(0, 0, 0);
-    chassis.turnToHeading(180, 1000);
+//     chassis.setPose(0, 0, 0);
+//     chassis.turnToHeading(180, 1000);
 
-    pros::delay(1000);
+//     pros::delay(1000);
 
-    chassis.setPose(-36, 36, 180);
-    chassis.follow(sPath_txt, 6, 20000);
-    chassis.turnToHeading(180, 2000);
-}
+//     chassis.setPose(-36, 36, 180);
+//     chassis.follow(sPath_txt, 6, 20000);
+//     chassis.turnToHeading(180, 2000);
+// }
 
-void quartCir1(){
+// void quartCir1(){
 
-	// set chassis pose
-    chassis.setPose(0, 0, 0);
-    // lookahead distance: 15 inches
-	// If you want the robot to follow the path more closely, decrease the lookahead distance
-	// If you want the robot to follow the path more loosely, but faster, then increase the lookahead distance
-    // timeout: 2000 ms
+// 	// set chassis pose
+//     chassis.setPose(0, 0, 0);
+//     // lookahead distance: 15 inches
+// 	// If you want the robot to follow the path more closely, decrease the lookahead distance
+// 	// If you want the robot to follow the path more loosely, but faster, then increase the lookahead distance
+//     // timeout: 2000 ms
 
-    chassis.follow(quartCir1_txt, 6, 20000, true);
-    clamp::toggle();
-    chassis.follow(quartCir2_txt, 6, 20000, false);
-}
-;
+//     chassis.follow(quartCir1_txt, 6, 20000, true);
+//     clamp::toggle();
+//     chassis.follow(quartCir2_txt, 6, 20000, false);
+// }
+// ;
 
-void idea1(){
+// void idea1(){
 
-	// set chassis pose
-    chassis.setPose(-64, 36, 0);
-    // lookahead distance: 15 inches
-	// If you want the robot to follow the path more closely, decrease the lookahead distance
-	// If you want the robot to follow the path more loosely, but faster, then increase the lookahead distance
-    // timeout: 2000 ms
+// 	// set chassis pose
+//     chassis.setPose(-64, 36, 0);
+//     // lookahead distance: 15 inches
+// 	// If you want the robot to follow the path more closely, decrease the lookahead distance
+// 	// If you want the robot to follow the path more loosely, but faster, then increase the lookahead distance
+//     // timeout: 2000 ms
 
-    chassis.follow(quartCir1_txt, 6, 20000, true);
-    chassis.follow(quartCir2_txt, 6, 20000, false);
-    chassis.follow(quartCir1_txt, 6, 20000, true);
-}
+//     chassis.follow(quartCir1_txt, 6, 20000, true);
+//     chassis.follow(quartCir2_txt, 6, 20000, false);
+//     chassis.follow(quartCir1_txt, 6, 20000, true);
+// }
 
-void autonomous(){
+void AngularPID() {
     // Tune Angular PID
-	// set position to x:0, y:0, heading:0
-	// chassis.setPose(0, 0, 0);
-	// turn to face heading 90 with a very long timeout
-	// chassis.turnToHeading(90, 1000000);
-
-//*******for easy standard, set all paths to start at possition 0,0 with heading 0, and rotate path acordingly */
-
+    // set position to x:0, y:0, heading:0
+    // chassis.setPose(0, 0, 0);
+    // turn to face heading 90 with a very long timeout
+    // chassis.turnToHeading(90, 1000000);
+    
+    //*******for easy standard, set all paths to start at possition 0,0 with heading 0, and rotate path acordingly */
+    
     // chassis.setPose(0, 0, 0);
     // chassis.follow(forward1_txt, 6, 20000, true);
     // pros::delay(1000);
     // chassis.setPose(0, 0, 180);
-
+    
     // //chassis.turnToHeading(180, 1000);
-
+    
     // pros::delay(1000);
-
+    
     // chassis.follow(forward1_txt, 6, 20000, false);
+}
+
+// void LinearPID() {
+    // Tune Linear PID     
+    // set position to x:0, y:0, heading:0s
+    // chassis.setPose(0, 0, 0);
+    // move 48" forwards
+    // chassis.moveToPoint(0, 48, 100000);
+// }
+
+ASSET(path1_txt);
+ASSET(path2_txt);
+ASSET(path3_txt);
+void autonomous(){
+    chassis.setPose(-55, 30, 270);
+    chassis.follow(path1_txt, 6, 2000, false);
+    pros::delay(1500);
+    clamp::toggle();
+    pros::delay(500);
+    conveyor::conveyorUp(550);
+    intake::intakeUp(600);
+    pros::delay(750);
+    chassis.follow(path2_txt, 6, 2500, true);
+    pros::delay(3200);
+    conveyor::conveyorStop();
+    chassis.turnToHeading(135, 1000);
+    pros::delay(1000);
+    clamp::toggle();
+    //chassis.setPose(-61.5, 61.5, 135);
+    chassis.moveToPose(-64.5, 64.5, 135, 3000);
+    chassis.moveToPose(-35, 45, 135, 3000);
+    chassis.turnToHeading(90, 1000);
+    chassis.moveToPose(24, 45, 90, 3000);
+    // pros::delay(500);
+    //chassis.follow(path3_txt, 6, 4000, true);
+    //pros::delay(6000);
 
 
 
-	// Tune Linear PID     
-	// set position to x:0, y:0, heading:0s
-	// chassis.setPose(0, 0, 0);
-	// move 48" forwards
-	// chassis.moveToPoint(0, 48, 100000);
 
-
-    // follow the next path, but with the robot going backwards
-    //chassis.follow(example2_txt, 15, 2000, false);
-    quartCir1();
 }
 
 void tankDrive(pros::Controller& controller, bool inverted){

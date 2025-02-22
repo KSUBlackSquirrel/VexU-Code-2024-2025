@@ -1,0 +1,41 @@
+-55, 30, 57.381
+-54.003, 30.065, 71.746
+-53.017, 30.23, 78.653
+-52.044, 30.463, 84.729
+-51.086, 30.747, 85.193
+-50.139, 31.07, 83.689
+-49.204, 31.424, 82.158
+-48.28, 31.805, 80.597
+-47.365, 32.208, 79.006
+-46.458, 32.631, 77.382
+-45.56, 33.071, 75.723
+-44.67, 33.527, 74.027
+-43.787, 33.996, 72.291
+-42.911, 34.478, 70.512
+-42.042, 34.972, 68.687
+-41.179, 35.478, 66.813
+-40.322, 35.994, 64.884
+-39.472, 36.52, 62.897
+-38.628, 37.056, 60.844
+-37.79, 37.602, 58.719
+-36.958, 38.157, 56.515
+-36.132, 38.721, 54.222
+-35.313, 39.294, 51.826
+-34.5, 39.877, 49.315
+-33.694, 40.468, 46.669
+-32.895, 41.069, 43.863
+-32.103, 41.68, 40.865
+-31.318, 42.3, 37.63
+-30.542, 42.93, 34.088
+-29.774, 43.571, 30.133
+-29.016, 44.223, 25.573
+-28.268, 44.887, 20
+-27.6, 45.5, 0
+-27.6, 45.5, 0
+-12.857, 59.015, 0
+endData
+127
+100
+200
+-55, 30, -49, 30, -35.487, 38.144, -27.6, 45.5
+#PATH.JERRYIO-DATA {"appVersion":"0.8.3","format":"LemLib v0.5","gc":{"robotWidth":14,"robotHeight":15,"robotIsHolonomic":false,"showRobot":true,"uol":2.54,"pointDensity":1,"controlMagnetDistance":0.7750015500030999,"fieldImage":{"displayName":"VURC 2025 - High Stakes (Skills)","signature":"VURC 2025 - High Stakes (Skills)","origin":{"__type":"built-in"}},"coordinateSystem":"VEX Gaming Positioning System"},"paths":[{"segments":[{"controls":[{"uid":"EjZE3JwBrv","x":-55,"y":30,"lock":false,"visible":true,"heading":270,"__type":"end-point"},{"uid":"BQ5xlB6OB8","x":-49,"y":30,"lock":false,"visible":true,"__type":"control"},{"uid":"nfGAobBOum","x":-35.48671969178767,"y":38.144126695888765,"lock":false,"visible":true,"__type":"control"},{"uid":"7dTQ2npy52","x":-27.6,"y":45.5,"lock":false,"visible":true,"heading":215,"__type":"end-point"}],"speedProfiles":[],"lookaheadKeyframes":[],"uid":"txRqcmrp3j"}],"pc":{"speedLimit":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":127,"label":"127"},"step":1,"from":20,"to":100},"bentRateApplicableRange":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":1,"label":"1"},"step":0.001,"from":0,"to":0.1},"maxDecelerationRate":127},"name":"Path","uid":"wHG2YzFc83","lock":false,"visible":true}]}
