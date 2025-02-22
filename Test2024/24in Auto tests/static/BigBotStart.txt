@@ -1,0 +1,30 @@
+-64.986, 0.492, 98.228
+-62.986, 0.468, 95.607
+-60.986, 0.444, 92.912
+-58.986, 0.42, 90.137
+-56.987, 0.397, 87.274
+-54.987, 0.373, 84.313
+-52.987, 0.349, 81.245
+-50.987, 0.325, 78.056
+-48.987, 0.301, 74.731
+-46.987, 0.278, 71.251
+-44.987, 0.254, 67.592
+-42.988, 0.23, 63.724
+-43.073, 0.219, 63.551
+-45.073, 0.219, 59.42
+-47.073, 0.219, 54.979
+-49.073, 0.219, 50.147
+-51.073, 0.219, 44.796
+-53.073, 0.219, 38.713
+-55.073, 0.219, 31.476
+-57.073, 0.219, 21.971
+-58.974, 0.219, 0
+-58.974, 0.219, 0
+-78.974, 0.219, 0
+endData
+127
+100
+200
+-64.986, 0.492, -53.508, 0.355, -53.508, 0.355, -42.03, 0.219
+-42.03, 0.219, -50.502, 0.219, -50.502, 0.219, -58.974, 0.219
+#PATH.JERRYIO-DATA {"appVersion":"0.8.3","format":"LemLib v0.5","gc":{"robotWidth":12,"robotHeight":12,"robotIsHolonomic":false,"showRobot":false,"uol":2.54,"pointDensity":2,"controlMagnetDistance":1.968503937007874,"fieldImage":{"displayName":"VURC 2025 - High Stakes (Skills)","signature":"VURC 2025 - High Stakes (Skills)","origin":{"__type":"built-in"}},"coordinateSystem":"VEX Gaming Positioning System"},"paths":[{"segments":[{"controls":[{"uid":"A9BgvhzZmX","x":-64.9859583014877,"y":0.4919038054780429,"lock":false,"visible":true,"heading":0,"__type":"end-point"},{"uid":"mA2nzJdFgo","x":-42.03044737917918,"y":0.21862391354579858,"lock":false,"visible":true,"heading":0,"__type":"end-point"}],"speedProfiles":[],"lookaheadKeyframes":[],"uid":"ymf8UpFdrO"},{"controls":[{"uid":"mA2nzJdFgo","x":-42.03044737917918,"y":0.21862391354579858,"lock":false,"visible":true,"heading":0,"__type":"end-point"},{"uid":"b8eqFoEWLt","x":-58.97380067897833,"y":0.21862391354579858,"lock":false,"visible":true,"heading":0,"__type":"end-point"}],"speedProfiles":[],"lookaheadKeyframes":[],"uid":"5PugIcqsI4"}],"pc":{"speedLimit":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":127,"label":"127"},"step":1,"from":20,"to":100},"bentRateApplicableRange":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":1,"label":"1"},"step":0.001,"from":0,"to":0.1},"maxDecelerationRate":127},"name":"BigBotStart","uid":"9OwU42MKdy","lock":false,"visible":true}]}

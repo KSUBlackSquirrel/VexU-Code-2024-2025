@@ -139,6 +139,24 @@ void quartCir1(){
     chassis.follow(quartCir2_txt, 6, 20000, false);
 }
 
+ASSET(idea1'1_txt);
+ASSET(idea1'2_txt);
+ASSET(idea1'3_txt);
+
+void idea1(){
+
+	// set chassis pose
+    chassis.setPose(-64, 36, 0);
+    // lookahead distance: 15 inches
+	// If you want the robot to follow the path more closely, decrease the lookahead distance
+	// If you want the robot to follow the path more loosely, but faster, then increase the lookahead distance
+    // timeout: 2000 ms
+
+    chassis.follow(quartCir1_txt, 6, 20000, true);
+    chassis.follow(quartCir2_txt, 6, 20000, false);
+    chassis.follow(quartCir1_txt, 6, 20000, true);
+}
+
 void autonomous(){
     // Tune Angular PID
 	// set position to x:0, y:0, heading:0
