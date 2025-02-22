@@ -33,9 +33,9 @@ void configureBindings() {
 	}
 	
 	if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
-		intake::command(intake::RUNNING);
-	} else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
 		intake::command(intake::INVERTED);
+	} else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
+		intake::command(intake::RUNNING);
 	} else {
 		intake::command(intake::STOP);
 	}

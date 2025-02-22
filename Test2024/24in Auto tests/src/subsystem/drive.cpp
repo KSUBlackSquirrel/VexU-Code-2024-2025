@@ -107,19 +107,32 @@ void autonomous(){
     
 	// Tune Linear PID     
 	// set position to x:0, y:0, heading:0
-	chassis.setPose(-58.974, 0.492, 90); // starting pos
 
+
+
+	chassis.setPose(-58.974, 0.492, 90); // starting pos
+    //
     //Start path (puts first ring on side pole) ----------*******Need to start bot with slight tilt to the right**********
+    //
     intake::IntakeUp(600);
-    conveyor::conveyorUp(50);
+    conveyor::conveyorUp(600);
     chassis.follow(BigBotStart1_txt, 6, 1000);
-    pros::delay(1000);
-    chassis.follow(BigBotStart2_txt, 6, 1000, false);
-    pros::delay(1000);
-    conveyor::conveyorUp(500);
-    pros::delay(3000); 
     conveyor::conveyorStop();
-    // intake::IntakeStop();
+    pros::delay(200); 
+    chassis.follow(BigBotStart2_txt, 6, 1000, false);
+
+
+    left_motor_group.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    right_motor_group.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    pros::delay(900); 
+    conveyor::conveyorUp(600);
+    pros::delay(3000); 
+    // left_motor_group.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    // right_motor_group.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    conveyor::conveyorStop();
+
+
+    //intake::IntakeStop();
     // conveyor::conveyorDown(500);
     // pros::delay(400);
     // conveyor::conveyorStop();
