@@ -93,7 +93,9 @@ lemlib::Pose pos(){
     return chassis.getPose();
 }
 
-ASSET(BigBotStart_txt);
+ASSET(BigBotStart1_txt);
+ASSET(BigBotStart2_txt);
+
 void autonomous(){
     // Tune Angular PID
 	//while(true){
@@ -105,12 +107,22 @@ void autonomous(){
     
 	// Tune Linear PID     
 	// set position to x:0, y:0, heading:0
-	 chassis.setPose(0, 0, 0);
-	// move 48" forwards
+	chassis.setPose(-58.974, 0.492, 90); // starting pos
+
+    //Start path (puts first ring on side pole)
     intake::IntakeUp(600);
-    convayor::conveyoreUp(500);
-    chassis.follow(BigBotStart_txt, 6, 20000);
+    chassis.follow(BigBotStart1_txt, 6, 20000);
+    chassis.follow(BigBotStart2_txt, 6, 20000, false);
+    conveyor::conveyorUp(600);
+    pros::delay(1500);
+    conveyor::conveyorStop();
+    intake::IntakeStop();
+    conveyor::conveyorDown(500);
     pros::delay(400);
+    conveyor::conveyorStop();
+    chassis.moveToPoint(-48,0, 20000);
+
+    //
 
 
 	// set chassis pose
@@ -123,6 +135,7 @@ void autonomous(){
     // follow the next path, but with the robot going backwards
     // chassis.follow(example2_txt, 15, 2000, false);
     //}
+    pros::delay(40000);
 }
 
 void tankDrive(pros::Controller& controller, bool inverted){
