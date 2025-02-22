@@ -138,10 +138,7 @@ void quartCir1(){
     clamp::toggle();
     chassis.follow(quartCir2_txt, 6, 20000, false);
 }
-
-ASSET(idea1'1_txt);
-ASSET(idea1'2_txt);
-ASSET(idea1'3_txt);
+;
 
 void idea1(){
 

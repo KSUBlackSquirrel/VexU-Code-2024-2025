@@ -10,11 +10,11 @@ void init() {
 }
 
 
-void IntakeUp() {
-    conveyorMotor.move_velocity(500);
+void IntakeUp(int velocity) {
+    conveyorMotor.move_velocity(velocity);
 }
-void IntakeDown() {
-    conveyorMotor.move_velocity(-500);
+void IntakeDown(int velocity) {
+    conveyorMotor.move_velocity(-velocity);
 }
 void IntakeStop() {
     conveyorMotor.brake();
@@ -31,13 +31,13 @@ void command(STATE state) {
 void running() {
     switch(currentState){
         case RUNNING:
-            IntakeUp();
+            IntakeUp(500);
             // if (conveyorMotor.get_efficiency() == 0) { //TODO
             //     currentState = STUCK;
             // }
             break;
         case INVERTED:
-            IntakeDown();
+            IntakeDown(500);
             break;
         case STOP:
             IntakeStop();

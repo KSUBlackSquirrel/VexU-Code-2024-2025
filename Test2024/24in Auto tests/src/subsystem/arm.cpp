@@ -10,11 +10,11 @@ void init() {
     armMotor.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
 }
 
-void armUp() {
-    armMotor.move_velocity(50);
+void armUp(int velocity) {
+    armMotor.move_velocity(velocity);
 }
-void armDown() {
-    armMotor.move_velocity(-50);
+void armDown(int velocity) {
+    armMotor.move_velocity(-velocity);
 }
 void armStop() {
     armMotor.brake();
@@ -29,13 +29,13 @@ void command(STATE state) {
 void running() {
     switch(currentState) {
         case FORWARD:
-            armUp();
+            armUp(50);
             break;
         case BACKWARD:
-            armDown();
+            armDown(50);
             break;
         case STOP:
-            armMotor.move_velocity(0);
+            armStop();
             break;
     }
 }
