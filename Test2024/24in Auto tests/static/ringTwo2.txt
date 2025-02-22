@@ -1,0 +1,33 @@
+-23.447, -23.557, 96.39
+-24.254, -21.727, 96.08
+-25.1, -19.914, 95.749
+-25.999, -18.128, 95.017
+-26.947, -16.367, 94.188
+-27.959, -14.642, 93.737
+-29.036, -12.957, 92.767
+-30.182, -11.318, 91.718
+-31.413, -9.743, 89.543
+-32.727, -8.236, 86.661
+-34.13, -6.811, 83.679
+-35.625, -5.483, 80.587
+-37.213, -4.267, 77.372
+-38.893, -3.183, 74.017
+-40.655, -2.239, 70.503
+-42.489, -1.443, 66.805
+-44.382, -0.801, 62.89
+-46.32, -0.31, 58.714
+-48.29, 0.031, 54.217
+-50.28, 0.226, 49.311
+-52.279, 0.296, 43.861
+-54.278, 0.244, 37.628
+-56.271, 0.085, 30.132
+-58.254, -0.171, 20
+-59.247, -0.328, 0
+-59.247, -0.328, 0
+-79.002, -3.449, 0
+endData
+127
+100
+200
+-23.447, -23.557, -30.553, -6.887, -40.391, 2.951, -59.247, -0.328
+#PATH.JERRYIO-DATA {"appVersion":"0.8.3","format":"LemLib v0.5","gc":{"robotWidth":12,"robotHeight":12,"robotIsHolonomic":false,"showRobot":false,"uol":2.54,"pointDensity":2,"controlMagnetDistance":1.968503937007874,"fieldImage":{"displayName":"VURC 2025 - High Stakes (Skills)","signature":"VURC 2025 - High Stakes (Skills)","origin":{"__type":"built-in"}},"coordinateSystem":"VEX Gaming Positioning System"},"paths":[{"segments":[{"controls":[{"uid":"H5dfzr5BZq","x":-23.447414727786565,"y":-23.556726684559457,"lock":false,"visible":true,"heading":135,"__type":"end-point"},{"uid":"h8lfgANmc7","x":-30.55269191802492,"y":-6.886653276692554,"lock":false,"visible":true,"__type":"control"},{"uid":"exMZtk5PEe","x":-40.390768027585715,"y":2.951422832868242,"lock":false,"visible":true,"__type":"control"},{"uid":"BrWcXgi9DN","x":-59.247080570910576,"y":-0.3279358703186901,"lock":false,"visible":true,"heading":90,"__type":"end-point"}],"speedProfiles":[],"lookaheadKeyframes":[],"uid":"7ZkOU2ftcN"}],"pc":{"speedLimit":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":127,"label":"127"},"step":1,"from":20,"to":100},"bentRateApplicableRange":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":1,"label":"1"},"step":0.001,"from":0,"to":0.1},"maxDecelerationRate":127},"name":"RingTwo2","uid":"MaRa4oi2eW","lock":false,"visible":true}]}

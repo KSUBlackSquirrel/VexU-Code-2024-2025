@@ -14,8 +14,8 @@ enum STATE{
 
 void init();
 
-void IntakeUp();
-void IntakeDown();
+void IntakeUp(int velocity);
+void IntakeDown(int velocity);
 void IntakeStop();
 
 

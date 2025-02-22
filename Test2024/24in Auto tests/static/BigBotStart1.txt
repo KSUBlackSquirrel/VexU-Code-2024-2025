@@ -1,0 +1,20 @@
+-63.5, 0, 92.995
+-61.5, 0, 88.449
+-59.5, 0, 83.656
+-57.5, 0, 78.572
+-55.5, 0, 73.135
+-53.5, 0, 67.261
+-51.5, 0, 60.821
+-49.5, 0, 53.613
+-47.5, 0, 45.273
+-45.5, 0, 34.997
+-43.5, 0, 20
+-43, 0, 0
+-43, 0, 0
+-23, 0, 0
+endData
+206.2
+100
+200
+-63.5, 0, -53.25, 0, -53.25, 0, -43, 0
+#PATH.JERRYIO-DATA {"appVersion":"0.8.3","format":"LemLib v0.5","gc":{"robotWidth":12,"robotHeight":12,"robotIsHolonomic":false,"showRobot":true,"uol":2.54,"pointDensity":2,"controlMagnetDistance":1.968503937007874,"fieldImage":{"displayName":"VURC 2025 - High Stakes (Skills)","signature":"VURC 2025 - High Stakes (Skills)","origin":{"__type":"built-in"}},"coordinateSystem":"VEX Gaming Positioning System"},"paths":[{"segments":[{"controls":[{"uid":"A9BgvhzZmX","x":-63.5,"y":0,"lock":false,"visible":true,"heading":90,"__type":"end-point"},{"uid":"mA2nzJdFgo","x":-43,"y":0,"lock":false,"visible":true,"heading":90,"__type":"end-point"}],"speedProfiles":[],"lookaheadKeyframes":[],"uid":"ymf8UpFdrO"}],"pc":{"speedLimit":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":127,"label":"127"},"step":1,"from":20,"to":100},"bentRateApplicableRange":{"minLimit":{"value":0,"label":"0"},"maxLimit":{"value":1,"label":"1"},"step":0.001,"from":0,"to":0.1},"maxDecelerationRate":206.2},"name":"BigBotStart1","uid":"9OwU42MKdy","lock":false,"visible":true}]}
