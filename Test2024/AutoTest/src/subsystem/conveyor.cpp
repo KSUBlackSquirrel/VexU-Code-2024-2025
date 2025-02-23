@@ -7,6 +7,7 @@ STATE currentState = RUNNING;
 
 void init() {
     conveyorMotor.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    conveyorMotor.tare_position_all();
 }
 
 

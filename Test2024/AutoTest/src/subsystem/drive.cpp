@@ -191,42 +191,62 @@ ASSET(path3Backwards_txt);
 
 void autonomous(){
     chassis.setPose(-55, 30, 270);
+    
     chassis.follow(path1_txt, 6, 2000, false);
     pros::delay(1500);
     clamp::toggle();
     pros::delay(500);
+
     conveyor::conveyorUp(550);
     intake::intakeUp(600);
     pros::delay(750);
+
     chassis.follow(path2_txt, 6, 2500, true);
     pros::delay(3200);
+
     conveyor::conveyorStop();
     chassis.turnToHeading(135, 1000);
     pros::delay(1000);
     clamp::toggle();
     chassis.follow(PushBackGoal_txt, 6, 900, false);
-
     pros::delay(900);
-
+    intake::intakeDown(600);
+    
     //after corner
-    chassis.moveToPose(chassis.getPose().x + 5, chassis.getPose().y - 5, chassis.getPose().theta, 3000);
-    pros::delay(500);
-    chassis.turnToHeading(135, 500);
-    pros::delay(500);
-    chassis.moveToPose(-48, 48, 135, 3000);
-    pros::delay(500);
-    chassis.turnToHeading(90, 1000);
-    pros::delay(500);
-    chassis.moveToPose(20, 48, 90, 3000);
-    pros::delay(500);
+    // chassis.moveToPose(chassis.getPose().x + 5, chassis.getPose().y - 5, chassis.getPose().theta, 3000);
+    // pros::delay(3000);
+    
+    chassis.turnToHeading(135, 700);
+    pros::delay(700);
+    
+    chassis.moveToPose(-48, 56, 135, 2000);
+    pros::delay(2000);
+
+    chassis.turnToHeading(90, 1700);
+    intake::intakeUp(600);
+    pros::delay(1700);
+
+    chassis.moveToPose(17.5, 56, 90, 1550);
+    pros::delay(1400);
+    intake::intakeUp(45);
+    pros::delay(150);
+
+    conveyor::conveyorDown(70);
+    pros::delay(750);
+    conveyor::conveyorStop();
+
+
     chassis.turnToHeading(0, 1000);
-    pros::delay(500);
-    chassis.follow(path3Backwards_txt, 6, 2500, false);
+    pros::delay(1000);
+
+    chassis.follow(path3Backwards_txt, 6, 1500, false);
     pros::delay(1000);
     clamp::toggle();
-    pros::delay(1000);
-    conveyor::conveyorUp(550);
+    pros::delay(500);
+
     intake::intakeUp(600);
+    pros::delay(500);
+    conveyor::conveyorUp(500);
 
 
     // pros::delay(500);
