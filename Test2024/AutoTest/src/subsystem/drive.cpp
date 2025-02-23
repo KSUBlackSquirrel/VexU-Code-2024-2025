@@ -190,6 +190,7 @@ ASSET(PushBackGoal_txt);
 ASSET(path3Backwards_txt);
 
 void autonomous(){
+    // six backwards
     chassis.setPose(-55, 30, 270);
     
     chassis.follow(path1_txt, 6, 2000, false);

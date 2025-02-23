@@ -86,8 +86,6 @@ lemlib::Chassis chassis(
 
 
 void init() {
-    left_motor_group.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
-    right_motor_group.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
     chassis.calibrate(); // calibrate sensors
 }
 
@@ -99,8 +97,13 @@ ASSET(BigBotStart1_txt);
 ASSET(BigBotStart2_txt);
 ASSET(BigBotStart3_txt);
 ASSET(BigBotStart4_txt);
+ASSET(BigBotStart5_txt);
+ASSET(BigBotStart6_txt);
+ASSET(BigBotStart7_txt);
+ASSET(BigBotStart8_txt);
 
 void autonomous(){
+    good();
     // Tune Angular PID
 	//while(true){
         // set position to x:0, y:0, heading:0
@@ -113,33 +116,110 @@ void autonomous(){
 	// set position to x:0, y:0, heading:0
 
 
-
-	chassis.setPose(-63.5, 0, 90); // starting pos
-    //
-    //Start path (puts first ring on side pole) ----------*******Need to start bot with slight tilt to the right**********
-    //
+    // four forwards
+	chassis.setPose(-63.5, 0, 90);
     intake::IntakeUp(600);
     conveyor::conveyorUp(50);
     chassis.follow(BigBotStart1_txt, 6, 1000, true);
-    pros::delay(1500); 
+    pros::delay(1250); 
+
     chassis.follow(BigBotStart2_txt, 6, 1000, false);
-    pros::delay(1000);   
+    pros::delay(1000);  
+
     chassis.turnToHeading(105, 500);
     pros::delay(500);  
+
     conveyor::conveyorUp(500);
     pros::delay(1500);     
+    conveyor::conveyorDown(100);
+    pros::delay(300);
     conveyor::conveyorStop();
+
     chassis.follow(BigBotStart3_txt, 6, 1000);
     pros::delay(1000);
-    chassis.turnToHeading(157, 750);
+
+    chassis.turnToHeading(130, 750);
     pros::delay(750);
+
 	//chassis.setPose(-50, 0, chassis.getPose().theta);
     //chassis.moveToPoint(-60, -100, 5000);
-    chassis.follow(BigBotStart4_txt, 6, 2500, true);
+    chassis.follow(BigBotStart4_txt, 6, 5000, true);
+    pros::delay(5000);
+    conveyor::conveyorUp(50);
+    
+    chassis.turnToHeading(123, 1000);
     pros::delay(1000);
-    conveyor::conveyorUp(40);
-    pros::delay(4000);
-    // pros::delay(2500);
+    intake::IntakeUp(35);
+
+    chassis.setPose(0, -47.5, 90);
+    chassis.follow(BigBotStart5_txt, 6, 2000, false);
+    pros::delay(2000);
+    clamp::toggle();
+    conveyor::conveyorUp(500);
+    intake::IntakeUp(600);
+    pros::delay(1000);
+
+
+    chassis.follow(BigBotStart6_txt, 6, 3500, false);
+    pros::delay(3500);
+
+    clamp::toggle();
+    conveyor::conveyorStop();
+    pros::delay(750);
+
+    chassis.follow(BigBotStart7_txt, 6, 3000, true);
+    pros::delay(3000);
+
+    chassis.turnToHeading(195, 500);
+    pros::delay(500);
+
+    chassis.setPose(0, 0, 0);
+    chassis.follow(BigBotStart8_txt, 6, 1000, false);
+    pros::delay(1000);
+    clamp::toggle();
+    pros::delay(500);
+
+    conveyor::conveyorUp(500);
+    pros::delay(750);
+
+    
+    chassis.turnToHeading(185, 1000);
+    pros::delay(1000);
+    chassis.setPose(0, 0, 0);
+    chassis.follow(BigBotStart8_txt, 6, 2000, false);
+    pros::delay(2000);
+    chassis.setPose(0, 0, 0);
+    chassis.follow(BigBotStart8_txt, 6, 2000, false);
+    pros::delay(2000);
+    chassis.setPose(0, 0, 0);
+    chassis.follow(BigBotStart8_txt, 6, 2000, false);
+    pros::delay(2000);
+    chassis.setPose(0, 0, 0);
+    chassis.follow(BigBotStart8_txt, 6, 2000, false);
+    pros::delay(2000);
+    clamp::toggle();
+    chassis.setPose(0, 0, 0);
+    chassis.follow(BigBotStart8_txt, 6, 2000, true);
+    pros::delay(2000);
+
+
+
+
+    // -------------- ahhhh ----------------
+    // chassis.turnToHeading(200, 500);
+    // pros::delay(8000);
+
+    // chassis.setPose(-62.5, -62.5, 245);
+    // chassis.follow(BigBotStart7_txt, 6, 10000, false);
+    // pros::delay(2000);
+    // clamp::toggle(); 
+    // pros::delay(8000);
+    // -------------- ahhhh ----------------
+
+    
+
+
+    // chassis.setPose(-54,-63, 90);
  
 
     //intake::IntakeStop();
@@ -148,7 +228,7 @@ void autonomous(){
     // conveyor::conveyorStop();
     // chassis.moveToPoint(-48,0, 20000);
 
-    //
+    // -54,-63
 
 
 	// set chassis pose
@@ -161,7 +241,16 @@ void autonomous(){
     // follow the next path, but with the robot going backwards
     // chassis.follow(example2_txt, 15, 2000, false);
     //}
-    pros::delay(40000);
+}
+
+void good() {
+    left_motor_group.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+    right_motor_group.set_brake_mode(pros::E_MOTOR_BRAKE_HOLD);
+}
+
+void bad() {
+    left_motor_group.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
+    right_motor_group.set_brake_mode(pros::E_MOTOR_BRAKE_COAST);
 }
 
 void tankDrive(pros::Controller& controller, bool inverted){

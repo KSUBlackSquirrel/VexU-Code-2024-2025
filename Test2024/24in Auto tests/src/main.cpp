@@ -25,17 +25,17 @@ void configureBindings() {
 	// }
 
 	if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
-		conveyor::command(conveyor::INVERTED);
-	}else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
 		conveyor::command(conveyor::RUNNING);
+	}else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
+		conveyor::command(conveyor::INVERTED);
 	} else {
 		conveyor::command(conveyor::STOP);
 	}
 	
 	if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
-		intake::command(intake::INVERTED);
-	} else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
 		intake::command(intake::RUNNING);
+	} else if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)){
+		intake::command(intake::INVERTED);
 	} else {
 		intake::command(intake::STOP);
 	}
@@ -123,6 +123,7 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	drive::bad();
 	pros::Task drive_task([&]() {
 		while (true) {
 			// drive the robot

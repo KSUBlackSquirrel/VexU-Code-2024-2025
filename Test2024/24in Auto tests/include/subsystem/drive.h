@@ -16,6 +16,9 @@ lemlib::Pose pos();
 
 void autonomous();
 
+void good();
+void bad();
+
 // drive controls
 void tankDrive(pros::Controller& controller, bool inverted = false);
 
