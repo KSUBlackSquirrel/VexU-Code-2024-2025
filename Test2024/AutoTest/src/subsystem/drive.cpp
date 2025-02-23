@@ -186,6 +186,9 @@ void AngularPID() {
 ASSET(path1_txt);
 ASSET(path2_txt);
 ASSET(path3_txt);
+ASSET(PushBackGoal_txt);
+ASSET(path3Backwards_txt);
+
 void autonomous(){
     chassis.setPose(-55, 30, 270);
     chassis.follow(path1_txt, 6, 2000, false);
@@ -201,11 +204,25 @@ void autonomous(){
     chassis.turnToHeading(135, 1000);
     pros::delay(1000);
     clamp::toggle();
-    //chassis.setPose(-61.5, 61.5, 135);
-    chassis.moveToPose(-64.5, 64.5, 135, 3000);
-    chassis.moveToPose(-35, 45, 135, 3000);
+    chassis.follow(PushBackGoal_txt, 6, 900, false);
+
+    pros::delay(900);
+
+    //after corner
+    chassis.moveToPose(chassis.getPose().x + 3, chassis.getPose().y - 3, chassis.getPose().theta, 3000);
+    chassis.turnToHeading(135, 1000);
+    chassis.moveToPose(-48, 48, 135, 3000);
     chassis.turnToHeading(90, 1000);
-    chassis.moveToPose(24, 45, 90, 3000);
+    chassis.moveToPose(20, 48, 90, 3000);
+    chassis.turnToHeading(0, 1000);
+    chassis.follow(path3Backwards_txt, 6, 2500, false);
+    pros::delay(1000);
+    clamp::toggle();
+    pros::delay(1000);
+    conveyor::conveyorUp(550);
+    intake::intakeUp(600);
+
+
     // pros::delay(500);
     //chassis.follow(path3_txt, 6, 4000, true);
     //pros::delay(6000);
