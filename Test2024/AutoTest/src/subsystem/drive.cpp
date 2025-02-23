@@ -209,12 +209,18 @@ void autonomous(){
     pros::delay(900);
 
     //after corner
-    chassis.moveToPose(chassis.getPose().x + 3, chassis.getPose().y - 3, chassis.getPose().theta, 3000);
-    chassis.turnToHeading(135, 1000);
+    chassis.moveToPose(chassis.getPose().x + 5, chassis.getPose().y - 5, chassis.getPose().theta, 3000);
+    pros::delay(500);
+    chassis.turnToHeading(135, 500);
+    pros::delay(500);
     chassis.moveToPose(-48, 48, 135, 3000);
+    pros::delay(500);
     chassis.turnToHeading(90, 1000);
+    pros::delay(500);
     chassis.moveToPose(20, 48, 90, 3000);
+    pros::delay(500);
     chassis.turnToHeading(0, 1000);
+    pros::delay(500);
     chassis.follow(path3Backwards_txt, 6, 2500, false);
     pros::delay(1000);
     clamp::toggle();
