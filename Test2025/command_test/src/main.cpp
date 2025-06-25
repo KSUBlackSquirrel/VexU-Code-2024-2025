@@ -11,14 +11,14 @@ ControllerScreenSubsystem* screenSub = new ControllerScreenSubsystem(&controller
 
 // Add Any Button Bindings Here
 void configureBindings() {
-    controller.setButtonCommand(pros::E_CONTROLLER_DIGITAL_LEFT, new Down(motorSub)).onTrue();
-    controller.setButtonCommand(pros::E_CONTROLLER_DIGITAL_RIGHT, new Up(motorSub)).onTrue();
-    controller.setButtonCommand(pros::E_CONTROLLER_DIGITAL_UP, new Pulse(motorSub)).onTrue();
-    controller.setButtonCommand(pros::E_CONTROLLER_DIGITAL_X, new MyTime(screenSub)).onFalse();
-    controller.setJoystickCommand(pros::E_CONTROLLER_ANALOG_RIGHT_Y, 20, new InstantCommand([m = motorSub] { m->forward(); })).onTrue();
-    controller.setJoystickCommand(pros::E_CONTROLLER_ANALOG_RIGHT_Y, -20, new InstantCommand([m = motorSub] { m->backward(); })).onTrue();
-    controller.setJoystickCommand(pros::E_CONTROLLER_ANALOG_RIGHT_Y, 20, new InstantCommand([m = motorSub] { m->stop(); })).onFalse();
-    controller.setJoystickCommand(pros::E_CONTROLLER_ANALOG_RIGHT_Y, -20, new InstantCommand([m = motorSub] { m->stop(); })).onFalse();
+    controller.setButtonCommand().onTrue(pros::E_CONTROLLER_DIGITAL_LEFT, new Down(motorSub));
+    controller.setButtonCommand().onTrue(pros::E_CONTROLLER_DIGITAL_RIGHT, new Up(motorSub));
+    controller.setButtonCommand().onTrue(pros::E_CONTROLLER_DIGITAL_UP, new Pulse(motorSub));
+    controller.setButtonCommand().onFalse(pros::E_CONTROLLER_DIGITAL_X, new MyTime(screenSub));
+    controller.setJoystickCommand().onTrue(pros::E_CONTROLLER_ANALOG_RIGHT_Y, 20, new InstantCommand([m = motorSub] { m->forward(); }));
+    controller.setJoystickCommand().onTrue(pros::E_CONTROLLER_ANALOG_RIGHT_Y, -20, new InstantCommand([m = motorSub] { m->backward(); }));
+    controller.setJoystickCommand().onFalse(pros::E_CONTROLLER_ANALOG_RIGHT_Y, 20, new InstantCommand([m = motorSub] { m->stop(); }));
+    controller.setJoystickCommand().onFalse(pros::E_CONTROLLER_ANALOG_RIGHT_Y, -20, new InstantCommand([m = motorSub] { m->stop(); }));
 }
 
 /**

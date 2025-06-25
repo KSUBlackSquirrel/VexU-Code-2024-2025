@@ -27,9 +27,9 @@ public:
         scheduler->push_back(std::unique_ptr<CommandBase>(cmd->clone())); 
     }
 
-    inline ButtonBinder& setButtonCommand(pros::controller_digital_e_t button, const CommandBase* cmd);
+    inline ButtonBinder setButtonCommand();
 
-    inline JoystickBinder& setJoystickCommand(pros::controller_analog_e_t stick, int threshold, const CommandBase* cmd);
+    inline JoystickBinder setJoystickCommand();
 
     inline void poll();
 
@@ -44,11 +44,22 @@ private:
 class ButtonBinder {
 public:
     enum class Edge { None, Rising, Falling };
-    ButtonBinder(Controller* ctrl, pros::controller_digital_e_t btn, const CommandBase* cmd)
-        : controller(ctrl), button(btn), command(cmd), edge(Edge::None) {}
+    ButtonBinder(Controller* ctrl) : controller(ctrl), edge(Edge::None) {}
 
-    ButtonBinder& onTrue()    { edge = Edge::Rising;  return *this; }
-    ButtonBinder& onFalse()   { edge = Edge::Falling; return *this; }
+    ButtonBinder& onTrue(pros::controller_digital_e_t btn, const CommandBase* cmd) {
+        button = btn;
+        command = cmd;
+        edge = Edge::Rising;
+        controller->buttonBinders.emplace_back(*this);
+        return controller->buttonBinders.back();
+    }
+    ButtonBinder& onFalse(pros::controller_digital_e_t btn, const CommandBase* cmd) {
+        button = btn;
+        command = cmd;
+        edge = Edge::Falling;
+        controller->buttonBinders.emplace_back(*this);
+        return controller->buttonBinders.back();
+    }
 
     void poll() {
         if (edge == Edge::Rising)  { bool curr = controller->get_digital_new_press(button);    if (curr) controller->addCommand(command); }
@@ -65,11 +76,24 @@ private:
 class JoystickBinder {
 public:
     enum class Edge { None, Rising, Falling };
-    JoystickBinder(Controller* ctrl, pros::controller_analog_e_t stick, int threshold, const CommandBase* cmd)
-        : controller(ctrl), stick(stick), threshold(threshold), command(cmd), prev(false), edge(Edge::None) {}
+    JoystickBinder(Controller* ctrl) : controller(ctrl), edge(Edge::None), prev(false) {}
 
-    JoystickBinder& onTrue()  { edge = Edge::Rising;  return *this; }
-    JoystickBinder& onFalse() { edge = Edge::Falling; return *this; }
+    JoystickBinder& onTrue(pros::controller_analog_e_t stick, int threshold, const CommandBase* cmd) {
+        this->stick = stick;
+        this->threshold = threshold;
+        this->command = cmd;
+        edge = Edge::Rising;
+        controller->joystickBinders.emplace_back(*this);
+        return controller->joystickBinders.back();
+    }
+    JoystickBinder& onFalse(pros::controller_analog_e_t stick, int threshold, const CommandBase* cmd) {
+        this->stick = stick;
+        this->threshold = threshold;
+        this->command = cmd;
+        edge = Edge::Falling;
+        controller->joystickBinders.emplace_back(*this);
+        return controller->joystickBinders.back();
+    }
 
     void poll() {
         int curr = controller->get_analog(stick);
@@ -88,14 +112,12 @@ private:
     Edge edge;
 };
 
-inline ButtonBinder& Controller::setButtonCommand(pros::controller_digital_e_t button, const CommandBase* cmd) {
-    buttonBinders.emplace_back(this, button, cmd);
-    return buttonBinders.back();
+inline ButtonBinder Controller::setButtonCommand() {
+    return ButtonBinder(this);
 }
 
-inline JoystickBinder& Controller::setJoystickCommand(pros::controller_analog_e_t stick, int threshold, const CommandBase* cmd) {
-    joystickBinders.emplace_back(this, stick, threshold, cmd);
-    return joystickBinders.back();
+inline JoystickBinder Controller::setJoystickCommand() {
+    return JoystickBinder(this);
 }
 
 inline void Controller::poll() {
