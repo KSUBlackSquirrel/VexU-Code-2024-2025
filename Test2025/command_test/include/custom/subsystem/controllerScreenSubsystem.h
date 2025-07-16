@@ -6,22 +6,34 @@
 
 class ControllerScreenSubsystem : public SubsystemBase {
 public:
-    inline ControllerScreenSubsystem(scheduler::Controller* con) : controller(con), count(0) {
+    inline ControllerScreenSubsystem(scheduler::Controller* con) : controller(con), count(0), countPulse(0) {
         controller->clear();
-        controller->print(1, 0, "Seconds: %d", count);
     }
 
     inline void tick() {
-        controller->print(1, 0, "Seconds: %d", ++count);
+        ++count;
+    }
+
+    inline void tickPulse() {
+        ++countPulse;
     }
 
     inline void periodic() override {
-        tick();
+        updateScreen();
+
     }
 
 private:
     scheduler::Controller* controller;
-    int count;
+    uint16_t count;
+    uint16_t countPulse;
+    
+    inline void updateScreen() {
+        printf("Debug: count=%d, countPulse=%d\n", count, countPulse);
+        int result1 = controller->print(0, 0, "Seconds: %d", count);
+        int result2 = controller->print(1, 0, "Pulse: %d", countPulse);
+        printf("Print results: line0=%d, line1=%d\n", result1, result2);
+    }
 };
 
 #endif

@@ -21,8 +21,6 @@ public:
         return true;
     }
 
-    inline void periodic() { subsystem->periodic(); }
-
     inline CommandBase* clone() const override {
         return new MyTime(*this);
     }

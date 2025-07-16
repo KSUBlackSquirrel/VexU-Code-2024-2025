@@ -27,8 +27,6 @@ public:
         return subsystem->getPosition() >= 150.0;
     }
 
-    inline void periodic() override { subsystem->periodic(); }
-
     inline CommandBase* clone() const override {
         return new Up(*this);
     }

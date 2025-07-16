@@ -19,17 +19,16 @@ public:
     }
 
     inline void addCommand(const CommandBase* cmd) { 
-        // Get all required subsystems for the new command
-        const auto& newSubsystems = cmd->getRequiredSubsystems();
-        
-        if (!newSubsystems.empty()) {
+        // Check for conflicts with existing commands
+        const auto& requiredSubsystems = cmd->getRequiredSubsystems();
+        if (!requiredSubsystems.empty()) {
             // Check for existing commands using any of the same subsystems
             for (auto it = scheduler->begin(); it != scheduler->end(); ) {
                 const auto& existingSubsystems = (*it)->getRequiredSubsystems();
                 bool conflict = false;
                 
                 // Check if there's any overlap in subsystems
-                for (SubsystemBase* newSub : newSubsystems) {
+                for (SubsystemBase* newSub : requiredSubsystems) {
                     for (SubsystemBase* existingSub : existingSubsystems) {
                         if (newSub == existingSub) {
                             conflict = true;
@@ -50,7 +49,27 @@ public:
         }
         
         // Add the new command
-        scheduler->push_back(std::unique_ptr<CommandBase>(cmd->clone())); 
+        scheduler->push_back(std::unique_ptr<CommandBase>(cmd->clone()));
+    }
+
+    // Register a subsystem for periodic updates
+    inline void registerSubsystemForPeriodic(SubsystemBase* subsystem) {
+        if (subsystem != nullptr) {
+            // Check if already in the list
+            for (SubsystemBase* existing : periodicSubsystems) {
+                if (existing == subsystem) {
+                    return; // Already registered
+                }
+            }
+            periodicSubsystems.push_back(subsystem);
+        }
+    }
+
+    // Update all registered subsystems
+    inline void updateSubsystems() {
+        for (SubsystemBase* subsystem : periodicSubsystems) {
+            subsystem->periodic();
+        }
     }
 
     inline ButtonBinder setButtonCommand();
@@ -65,6 +84,7 @@ public:
 
 private:
     std::vector<std::unique_ptr<CommandBase>>* scheduler;
+    std::vector<SubsystemBase*> periodicSubsystems;
 };
 
 class ButtonBinder {
@@ -76,6 +96,18 @@ public:
         button = btn;
         command = cmd;
         edge = Edge::Rising;
+        
+        // Register all subsystems from this command immediately
+        const auto& requiredSubsystems = cmd->getRequiredSubsystems();
+        for (SubsystemBase* subsystem : requiredSubsystems) {
+            controller->registerSubsystemForPeriodic(subsystem);
+        }
+        
+        const auto& usedSubsystems = cmd->getUsedSubsystems();
+        for (SubsystemBase* subsystem : usedSubsystems) {
+            controller->registerSubsystemForPeriodic(subsystem);
+        }
+        
         controller->buttonBinders.emplace_back(*this);
         return controller->buttonBinders.back();
     }
@@ -83,6 +115,18 @@ public:
         button = btn;
         command = cmd;
         edge = Edge::Falling;
+        
+        // Register all subsystems from this command immediately
+        const auto& requiredSubsystems = cmd->getRequiredSubsystems();
+        for (SubsystemBase* subsystem : requiredSubsystems) {
+            controller->registerSubsystemForPeriodic(subsystem);
+        }
+        
+        const auto& usedSubsystems = cmd->getUsedSubsystems();
+        for (SubsystemBase* subsystem : usedSubsystems) {
+            controller->registerSubsystemForPeriodic(subsystem);
+        }
+        
         controller->buttonBinders.emplace_back(*this);
         return controller->buttonBinders.back();
     }
@@ -109,6 +153,18 @@ public:
         this->threshold = threshold;
         this->command = cmd;
         edge = Edge::Rising;
+        
+        // Register all subsystems from this command immediately
+        const auto& requiredSubsystems = cmd->getRequiredSubsystems();
+        for (SubsystemBase* subsystem : requiredSubsystems) {
+            controller->registerSubsystemForPeriodic(subsystem);
+        }
+        
+        const auto& usedSubsystems = cmd->getUsedSubsystems();
+        for (SubsystemBase* subsystem : usedSubsystems) {
+            controller->registerSubsystemForPeriodic(subsystem);
+        }
+        
         controller->joystickBinders.emplace_back(*this);
         return controller->joystickBinders.back();
     }
@@ -117,6 +173,18 @@ public:
         this->threshold = threshold;
         this->command = cmd;
         edge = Edge::Falling;
+        
+        // Register all subsystems from this command immediately
+        const auto& requiredSubsystems = cmd->getRequiredSubsystems();
+        for (SubsystemBase* subsystem : requiredSubsystems) {
+            controller->registerSubsystemForPeriodic(subsystem);
+        }
+        
+        const auto& usedSubsystems = cmd->getUsedSubsystems();
+        for (SubsystemBase* subsystem : usedSubsystems) {
+            controller->registerSubsystemForPeriodic(subsystem);
+        }
+        
         controller->joystickBinders.emplace_back(*this);
         return controller->joystickBinders.back();
     }

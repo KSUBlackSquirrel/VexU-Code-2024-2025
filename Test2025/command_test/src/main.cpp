@@ -13,7 +13,7 @@ ControllerScreenSubsystem* screenSub = new ControllerScreenSubsystem(&controller
 void configureBindings() {
     controller.setButtonCommand().onTrue(pros::E_CONTROLLER_DIGITAL_LEFT, new Down(motorSub));
     controller.setButtonCommand().onTrue(pros::E_CONTROLLER_DIGITAL_RIGHT, new Up(motorSub));
-    controller.setButtonCommand().onTrue(pros::E_CONTROLLER_DIGITAL_UP, new Pulse(motorSub));
+    controller.setButtonCommand().onTrue(pros::E_CONTROLLER_DIGITAL_UP, new Pulse(motorSub, screenSub));
     controller.setButtonCommand().onFalse(pros::E_CONTROLLER_DIGITAL_X, new MyTime(screenSub));
     controller.setJoystickCommand().onTrue(pros::E_CONTROLLER_ANALOG_RIGHT_Y, 20, new InstantCommand([m = motorSub] { m->forward(); }));
     controller.setJoystickCommand().onTrue(pros::E_CONTROLLER_ANALOG_RIGHT_Y, -20, new InstantCommand([m = motorSub] { m->backward(); }));
@@ -81,16 +81,20 @@ void opcontrol() {
         pros::screen::print(pros::E_TEXT_MEDIUM, 4, "Y: %3d", controller.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y));
 
         controller.poll();                                                      // 1. Check all bindings and schedules commands as needed
+        
         for (auto it = schedulerList->begin(); it != schedulerList->end();) {
             (*it)->execute();                                                   // 2. Run the command's main logic
             if ((*it)->isFinished()) {                                          // 3. Check if finished
                 (*it)->end();                                                   // 4. Clean up if finished
                 it = schedulerList->erase(it);                                  // Remove from scheduler
             } else {
-                (*it)->periodic();                                              // 5. Optionally run periodic tasks
                 ++it;
             }
         }
-        pros::delay(20);
+        
+        // Update all registered subsystems once per loop
+        controller.updateSubsystems();
+
+        pros::delay(30);
     }
 };
