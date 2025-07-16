@@ -6,7 +6,10 @@
 
 class Pulse : public CommandBase {
 public:
-    Pulse(MotorSubsystem* sub) { subsystem = sub; }
+    Pulse(MotorSubsystem* sub) { 
+        subsystem = sub; 
+        addRequirements(subsystem);
+    }
 
     inline void execute() override {
         if (subsystem->getPosition() >= 150.0) {
@@ -17,6 +20,10 @@ public:
     }
 
     inline void end() override {
+        subsystem->stop();
+    }
+
+    inline void interrupted() override {
         subsystem->stop();
     }
 

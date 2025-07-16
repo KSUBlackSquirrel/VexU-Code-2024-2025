@@ -6,7 +6,9 @@
 
 class InstantCommand : public CommandBase  {
 public:
-    InstantCommand(std::function<void()> func) : action(func) {}
+    InstantCommand(std::function<void()> func, SubsystemBase* subsystem = nullptr) : action(func) {
+        if (subsystem) addRequirements(subsystem);
+    }
 
     inline void execute() override { if (action) action(); }
 
@@ -14,7 +16,14 @@ public:
 
     inline void end() override {}
 
-    inline CommandBase* clone() const override { return new InstantCommand(action); }
+    inline CommandBase* clone() const override { 
+        auto clone = new InstantCommand(action);
+        // Copy requirements from original command
+        for (auto* subsystem : getRequiredSubsystems()) {
+            clone->addRequirements(subsystem);
+        }
+        return clone;
+    }
 
 private:
     std::function<void()> action;

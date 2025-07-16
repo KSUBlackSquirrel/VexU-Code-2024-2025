@@ -19,11 +19,37 @@ public:
     }
 
     inline void addCommand(const CommandBase* cmd) { 
-        for (const auto& existing : *scheduler) {
-            if (typeid(*existing) == typeid(*cmd)) {
-                return;
+        // Get all required subsystems for the new command
+        const auto& newSubsystems = cmd->getRequiredSubsystems();
+        
+        if (!newSubsystems.empty()) {
+            // Check for existing commands using any of the same subsystems
+            for (auto it = scheduler->begin(); it != scheduler->end(); ) {
+                const auto& existingSubsystems = (*it)->getRequiredSubsystems();
+                bool conflict = false;
+                
+                // Check if there's any overlap in subsystems
+                for (SubsystemBase* newSub : newSubsystems) {
+                    for (SubsystemBase* existingSub : existingSubsystems) {
+                        if (newSub == existingSub) {
+                            conflict = true;
+                            break;
+                        }
+                    }
+                    if (conflict) break;
+                }
+                
+                if (conflict) {
+                    // Found conflict - interrupt the existing command
+                    (*it)->interrupted();
+                    it = scheduler->erase(it);
+                } else {
+                    ++it;
+                }
             }
         }
+        
+        // Add the new command
         scheduler->push_back(std::unique_ptr<CommandBase>(cmd->clone())); 
     }
 

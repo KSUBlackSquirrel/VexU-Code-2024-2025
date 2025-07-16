@@ -6,13 +6,20 @@
 
 class Down : public CommandBase {
 public:
-    Down(MotorSubsystem* sub) : CommandBase() { subsystem = sub; }
+    Down(MotorSubsystem* sub) : CommandBase() { 
+        subsystem = sub; 
+        addRequirements(subsystem);
+    }
 
     inline void execute() override {
         subsystem->backward();
     }
 
     inline void end() override {
+        subsystem->stop();
+    }
+
+    inline void interrupted() override {
         subsystem->stop();
     }
 

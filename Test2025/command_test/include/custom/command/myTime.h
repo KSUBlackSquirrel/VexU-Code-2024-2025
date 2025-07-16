@@ -6,7 +6,10 @@
 
 class MyTime : public CommandBase {
 public:
-    MyTime(ControllerScreenSubsystem* sub) { subsystem = sub; }
+    MyTime(ControllerScreenSubsystem* sub) { 
+        subsystem = sub; 
+        addRequirements(subsystem);
+    }
 
     inline void execute() override {
         subsystem->tick();
@@ -23,6 +26,7 @@ public:
     inline CommandBase* clone() const override {
         return new MyTime(*this);
     }
+
 private:
     ControllerScreenSubsystem* subsystem;
 };
