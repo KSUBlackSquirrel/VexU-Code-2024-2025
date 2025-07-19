@@ -30,8 +30,10 @@ private:
     
     inline void updateScreen() {
         printf("Debug: count=%d, countPulse=%d\n", count, countPulse);
-        int result1 = controller->print(0, 0, "Seconds: %d", count);
-        int result2 = controller->print(1, 0, "Pulse: %d", countPulse);
+        bool result1 = controller->print(0, 0, "Seconds: %d", count);
+        pros::delay(50); // added for print buffer
+        bool result2 = controller->print(1, 0, "Pulse: %d", countPulse);
+        pros::delay(50); // added for print buffer
         printf("Print results: line0=%d, line1=%d\n", result1, result2);
     }
 };

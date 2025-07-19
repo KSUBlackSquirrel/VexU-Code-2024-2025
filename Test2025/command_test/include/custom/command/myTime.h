@@ -8,7 +8,7 @@ class MyTime : public CommandBase {
 public:
     MyTime(ControllerScreenSubsystem* sub) { 
         subsystem = sub; 
-        addRequirements(subsystem);
+        addUsedSubsystem(subsystem);  // Changed from addRequirements to addUsedSubsystem
     }
 
     inline void execute() override {
