@@ -14,7 +14,7 @@ public:
         addUsedSubsystem(controllerSubsystem);     // Screen just needs periodic updates
 
         toggle = false;
-        lastToggleTime = 0;
+        lastToggleTime = 15;
     }
 
     inline void execute() override {
@@ -47,6 +47,7 @@ public:
     }
 
     inline void interrupted() override {
+        printf("pulse stopped\n");
         motorSubsystem->stop();
     }
 

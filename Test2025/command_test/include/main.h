@@ -57,6 +57,7 @@
 #include "custom/command/up.h"
 #include "custom/command/pulse.h"
 #include "custom/command/myTime.h"
+#include "custom/command/moveWithOutLimit.h"
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do

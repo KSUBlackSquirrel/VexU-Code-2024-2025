@@ -20,6 +20,7 @@ public:
     }
 
     inline void interrupted() override {
+        printf("up stopped\n");
         subsystem->stop();
     }
 

@@ -2,8 +2,8 @@
 
 std::vector<std::unique_ptr<CommandBase>>* schedulerList = new std::vector<std::unique_ptr<CommandBase>>();
 
-scheduler::Controller controller(pros::E_CONTROLLER_MASTER, schedulerList);
-//scheduler::Controller controller2(pros::E_CONTROLLER_PARTNER, schedulerList);
+Controller controller(pros::E_CONTROLLER_MASTER, schedulerList);
+//Controller controller2(pros::E_CONTROLLER_PARTNER, schedulerList);
 
 // Add Subsystems Here
 MotorSubsystem* motorSub = new MotorSubsystem();
@@ -15,6 +15,10 @@ void configureBindings() {
     controller.setButtonCommand().onTrue(pros::E_CONTROLLER_DIGITAL_RIGHT, new Up(motorSub));
     controller.setButtonCommand().onTrue(pros::E_CONTROLLER_DIGITAL_UP, new Pulse(motorSub, screenSub));
     controller.setButtonCommand().onTrue(pros::E_CONTROLLER_DIGITAL_X, new MyTime(screenSub));
+    // WPILib-style whileTrue - motor runs continuously while A button is held, stops when released
+    controller.setButtonCommand().whileTrue(pros::E_CONTROLLER_DIGITAL_A, new MoveWithoutLimit(motorSub, true));
+    // Another whileTrue example with B button
+    controller.setButtonCommand().whileTrue(pros::E_CONTROLLER_DIGITAL_B, new MoveWithoutLimit(motorSub, false));
     controller.setJoystickCommand().onTrue(pros::E_CONTROLLER_ANALOG_RIGHT_Y, 20, new InstantCommand([m = motorSub] { m->forward(); }));
     controller.setJoystickCommand().onTrue(pros::E_CONTROLLER_ANALOG_RIGHT_Y, -20, new InstantCommand([m = motorSub] { m->backward(); }));
     controller.setJoystickCommand().onFalse(pros::E_CONTROLLER_ANALOG_RIGHT_Y, 20, new InstantCommand([m = motorSub] { m->stop(); }));

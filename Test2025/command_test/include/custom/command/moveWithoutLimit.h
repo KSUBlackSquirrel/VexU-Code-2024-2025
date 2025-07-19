@@ -1,18 +1,22 @@
-#ifndef DOWN_H_
-#define DOWN_H_
+#ifndef MOVEWITHOUTLIMIT_H_
+#define MOVEWITHOUTLIMIT_H_
 
 #include "commandBase.h"
 #include "custom/subsystem/motorSubsystem.h"
 
-class Down : public CommandBase {
+class MoveWithoutLimit : public CommandBase {
 public:
-    Down(MotorSubsystem* sub) : CommandBase() { 
+    MoveWithoutLimit(MotorSubsystem* sub, bool fwd) : dir(fwd) { 
         subsystem = sub; 
         addRequirements(subsystem);
     }
 
     inline void execute() override {
-        subsystem->backward();
+        if(dir) {
+            subsystem->forward();
+        } else {
+            subsystem->backward();
+        }
     }
 
     inline void end() override {
@@ -20,20 +24,21 @@ public:
     }
 
     inline void interrupted() override {
-        printf("down stopped\n");
+        printf("MoveWithoutLimit stopped\n");
         subsystem->stop();
     }
 
     inline bool isFinished() override {
-        return subsystem->getPosition() <= 0.0;
+        return false;
     }
 
     inline CommandBase* clone() const override {
-        return new Down(*this);
+        return new MoveWithoutLimit(*this);
     }
 
 private:
     MotorSubsystem* subsystem;
+    bool dir;
 };
 
 #endif
