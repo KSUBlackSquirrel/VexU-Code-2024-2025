@@ -40,12 +40,14 @@
  * You should add more #includes here
  */
 //#include "okapi/api.hpp"
-#include "pros/colors.hpp"
 #include "lemlib/api.hpp" // IWYU pragma: keep
 #include "custom/globals.h"
 #include "custom/subsystem/subsystemBase.h"
 #include "custom/command/commandBase.h"
 #include "custom/command/instantCommand.h"
+
+
+#include "pros/colors.hpp"
 #include "custom/command/up.h"
 #include "custom/command/down.h"
 #include "custom/command/pulse.h"
